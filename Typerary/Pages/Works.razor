@@ -1,10 +1,13 @@
 ﻿@page "/works"
 @inject HttpClient Http
 
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
 <PageTitle>Works</PageTitle>
 
 <h1>作品一覧</h1>
+</Animate>
 
+<Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
 @if (works == null)
 {
     <p><em>Loading...</em></p>
@@ -30,7 +33,7 @@ else
             }
         </tbody>
     </table>
-}
+}</Animate>
 
 @code {
     private WorkData[]? works;

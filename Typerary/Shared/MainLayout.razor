@@ -10,8 +10,10 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
+        <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+            <article class="content px-4">
+                @Body
+            </article>
+        </Animate>
     </main>
 </div>
