@@ -1,0 +1,58 @@
+﻿@page "/works"
+@inject HttpClient Http
+
+<PageTitle>Works</PageTitle>
+
+<h1>作品一覧</h1>
+
+@if (works == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>タイトル</th>
+                <th>著者名</th>
+                <th>言語</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var work in works)
+            {
+                <tr>
+                    <td>@work.Title</td>
+                    <td>@work.Author</td>
+                    <td>@work.WorkUri</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WorkData[]? works;
+
+    protected override async Task OnInitializedAsync()
+    {
+        works = await Http.GetFromJsonAsync<WorkData[]>("works-metadata/works.json");
+    }
+
+    public class WorkData
+    {
+        public string WorkId { get; set; }
+
+        public string Title { get; set; }
+
+        public string TitleYomi { get; set; }
+
+        public string Author { get; set; }
+
+        public string AuthorYomi { get; set; }
+
+        public Uri WorkUri { get; set; }
+    }
+
+}
