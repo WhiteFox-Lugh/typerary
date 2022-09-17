@@ -4,9 +4,14 @@
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
-        <PageTitle>Not found</PageTitle>
+        <PageTitle>Typerary - Not found</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
+            <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3">
+                Not Found
+            </RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1">
+                <RadzenIcon Icon="announcement" IconStyle="IconStyle.Danger" /> お探しの本は取り扱っておりません。
+            </RadzenText>
         </LayoutView>
     </NotFound>
 </Router>
