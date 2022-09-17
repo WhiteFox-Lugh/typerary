@@ -2,60 +2,78 @@
 @inject HttpClient Http
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
-<PageTitle>Works</PageTitle>
+    <PageTitle>Works</PageTitle>
 
-<h1>作品一覧</h1>
+    <h1>作品一覧</h1>
 </Animate>
 
-<Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
 @if (works == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="loader">Loading...</div>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>タイトル</th>
-                <th>著者名</th>
-                <th>言語</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var work in works)
-            {
-                <tr>
-                    <td>@work.Title</td>
-                    <td>@work.Author</td>
-                    <td>@work.WorkUri</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}</Animate>
+    <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
+        <RadzenCard>
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@works" TItem="WorkData" PageSize="20" PageNumbersCount="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                <Template Context="work">
+                    <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-3 p-3 product-title">
+                                    <RadzenText TextStyle="TextStyle.DisplayH6" TagName="TagName.H6" Class="rz-color-secondary">
+                                        @(work.Title)
+                                    </RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" Class="rz-color-secondary">
+                                        @(work.SubTitle)
+                                    </RadzenText>
+                                </div>
+                                <div class="col-lg-9 p-3">
+                                    <div class="row d-flex">
+                                        <div class="col-md-6 col-lg-2">
+                                            <h5 class="mb-0">Author</h5>
+                                            <p class="mb-sm-2 mb-lg-0">@(work.Author)</p>
+                                        </div>
+                                        <div class="col-md-6 col-lg-2">
+                                            <h5 class="mb-0">Author Yomi</h5>
+                                            <p class="mb-sm-2 mb-lg-0">@(work.AuthorYomi)</p>
+                                        </div>
+                                        <div class="col-md-6 order-first order-lg-last col-lg-3 text-sm-left text-lg-right mb-3 mb-lg-0">
+                                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@(work.WorkId) />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
+        </RadzenCard>
+    </Animate>
+}
+
+
+<style>
+    .product-title {
+        min-height: 72px;
+        background-color: var(--rz-secondary-lighter);
+    }
+
+    .price-badge {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 20px;
+        padding: 8px;
+    }
+</style>
 
 @code {
-    private WorkData[]? works;
+    private List<WorkData> works;
 
     protected override async Task OnInitializedAsync()
     {
-        works = await Http.GetFromJsonAsync<WorkData[]>("works-metadata/works.json");
-    }
-
-    public class WorkData
-    {
-        public string WorkId { get; set; }
-
-        public string Title { get; set; }
-
-        public string TitleYomi { get; set; }
-
-        public string Author { get; set; }
-
-        public string AuthorYomi { get; set; }
-
-        public Uri WorkUri { get; set; }
+        var data = await Http.GetFromJsonAsync<WorkMetadata>("works-metadata/works.json");
+        works = data.WorkList;
     }
 
 }
