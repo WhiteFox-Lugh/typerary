@@ -1,18 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <RadzenCard Class="mb-5 mx-auto navbar fixed-top">
-        <RadzenMenu>
-            <RadzenMenuItem Text="Home" Path="/" Icon="home"></RadzenMenuItem>
-            <RadzenMenuItem Text="Works" Path="/works" Icon="book"></RadzenMenuItem>
-            <RadzenMenuItem Text="Release" Path="/release" Icon="info"></RadzenMenuItem>
-        </RadzenMenu>
+<main>
+    <RadzenCard Class="mb-5 navbar mr-auto fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">Typerary</div>
+            <RadzenMenu class="mr-auto">
+                <RadzenMenuItem Text="Home" Path="/" Icon="home"></RadzenMenuItem>
+                <RadzenMenuItem Text="Works" Path="/works" Icon="book"></RadzenMenuItem>
+                <RadzenMenuItem Text="Release" Path="/release" Icon="info"></RadzenMenuItem>
+            </RadzenMenu>
+        </div>
     </RadzenCard>
-    <main>
-        <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
-            <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-                @Body
-            </article>
-        </Animate>
-    </main>
-</div>
+    <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+        <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
+            @Body
+        </article>
+    </Animate>
+</main>
