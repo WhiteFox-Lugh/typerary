@@ -41,14 +41,14 @@ else
                         </RadzenText>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn Width="10%" TItem="WorkData" Property="Language" Title="言語 / Language">
+                <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="Language" Title="言語 / Language">
                     <Template Context="work">
                         <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
                             <RadzenBadge BadgeStyle=@(work.GetLanguageBadgeStyle()) Text=@(work.GetLanguageScreenName()) />
                         </RadzenText>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn Width="20%" TItem="WorkData" Property="WorkUri" Sortable="false" Filterable="false" Title="ソース / Source">
+                <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="WorkUri" Sortable="false" Filterable="false" Title="ソース / Source">
                     <Template Context="work">
                         <RadzenButton Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
                     </Template>

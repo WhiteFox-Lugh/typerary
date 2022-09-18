@@ -25,14 +25,15 @@ else
                                         @(release.GetUpdateDateTime().ToString("yyyy/MM/dd"))
                                     </RadzenText>
                                     <RadzenBadge BadgeStyle="BadgeStyle.Warning" Shade="Shade.Dark">
-                                        <div style=" display: flex; align-items: center; padding: 0 0.25rem 0 0; gap: 0.25rem; text-transform: none;">
-                                            <RadzenIcon Icon="history_edu" /> Version @(release.Version)
+                                        <div style=" display: flex; align-items: center; text-transform: none;" class="p-1">
+                                            <RadzenIcon Icon="history_edu" /> <span style="font-size: medium">Version @(release.Version)</span>
                                         </div>
                                     </RadzenBadge>
                                 </div>
                                 <div class="col-lg-9 p-3">
-                                    <h5 class="mb-0">Detail</h5>
-                                    <p>@(release.DetailText)</p>
+                                    <Emoji>
+                                        <p>@((MarkupString)Markdown.ToHtml(release.DetailText))</p>
+                                    </Emoji>
                                 </div>
                             </div>
                         </div>
