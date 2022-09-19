@@ -6,7 +6,7 @@
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
 
-        <h1>作品一覧</h1>
+        <RadzenText TextStyle="TextStyle.H3">作品一覧</RadzenText>
 
         @if (works == null)
         {
@@ -15,7 +15,7 @@
         else
         {
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@works" TItem="WorkData" class="rz-shadow-2">
+                <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@works" TItem="WorkData" class="rz-shadow-2 mt-5">
                     <Columns>
                         <RadzenDataGridColumn Width="5%" TItem="WorkData" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                             <Template Context="work">
