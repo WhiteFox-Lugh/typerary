@@ -1,11 +1,24 @@
 @page "/"
 @using Radzen
 
+<PageTitle>Typerary - Home</PageTitle>
+
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
-<PageTitle>Index</PageTitle>
+    <div class="container-fluid m-5">
+        <div class="row">
+            <div class="col col-lg-5">
+                <article class="content text-center p-5 body-index-bg-alpha rz-border-radius-8">
 
-<RadzenText TextStyle="TextStyle.DisplayH3">Typerary へようこそ</RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH2" class="p-3 index-text-shadow">Typerary</RadzenText>
 
-<RadzenText TextStyle="TextStyle.Body1"></RadzenText>
-
+                    <RadzenText TextStyle="TextStyle.H5" class="p-3 index-text-shadow">タイピングで味わう文学作品の世界</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">ようこそ、Typerary （タイプラリー）へ。</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">本図書館は、文学作品をタイピングすることができる</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">風変わりな図書館となっております。</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">ごゆっくりお愉しみくださいませ。</RadzenText>
+                </article>
+            </div>
+            <div class="col col-lg-6"></div>
+        </div>
+    </div>
 </Animate>
