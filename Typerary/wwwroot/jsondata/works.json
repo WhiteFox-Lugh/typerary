@@ -1,0 +1,33 @@
+﻿{
+  "WorkList": [
+    {
+      "WorkId": "jp-628",
+      "Title": "ごん狐",
+      "TitleYomi": "ごんぎつね",
+      "Author": "新美南吉",
+      "AuthorYomi": "にいみなんきち",
+      "Language": "Japanese",
+      "Source":  "青空文庫",
+      "WorkUri": "https://www.aozora.gr.jp/cards/000121/card628.html"
+    },
+    {
+      "WorkId": "jp-47354",
+      "Title": "注文の多い料理店",
+      "TitleYomi": "ちゅうもんのおおいりょうりてん",
+      "Author": "宮沢賢治",
+      "AuthorYomi": "みやざわけんじ",
+      "Language": "Japanese",
+      "Source":  "青空文庫",
+      "WorkUri": "https://www.aozora.gr.jp/cards/000081/card43754.html"
+    },
+    {
+      "WorkId": "en-14838",
+      "Title": "The Tale of Peter Rabbit",
+      "TitleYomi": "The Tale of Peter Rabbit by Beatrix Potter",
+      "Author": "Beatrix Potter",
+      "Language": "English",
+      "Source": "Project Gutenberg",
+      "WorkUri": "https://www.gutenberg.org/ebooks/14838"
+    }
+  ]
+}

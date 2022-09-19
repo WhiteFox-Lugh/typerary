@@ -1,58 +1,73 @@
 ﻿@page "/works"
 @inject HttpClient Http
 
-<PageTitle>Works</PageTitle>
+<PageTitle>Typerary - Works</PageTitle>
 
-<h1>作品一覧</h1>
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
 
-@if (works == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>タイトル</th>
-                <th>著者名</th>
-                <th>言語</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var work in works)
-            {
-                <tr>
-                    <td>@work.Title</td>
-                    <td>@work.Author</td>
-                    <td>@work.WorkUri</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        <RadzenText TextStyle="TextStyle.H3">作品一覧</RadzenText>
+
+        @if (works == null)
+        {
+            <div class="loader">Loading...</div>
+        }
+        else
+        {
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+                <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@works" TItem="WorkData" class="rz-shadow-2 mt-5">
+                    <Columns>
+                        <RadzenDataGridColumn Width="5%" TItem="WorkData" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                            <Template Context="work">
+                                @(works.IndexOf(work) + 1)
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Width="40%" TItem="WorkData" Property="TitleYomi" Title="作品名 / Title">
+                            <Template Context="work">
+                                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="rz-color-primary-darker">
+                                    @(work.Title)
+                                </RadzenText>
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" class="rz-color-primary-darker">
+                                    @(work.SubTitle)
+                                </RadzenText>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Width="25%" TItem="WorkData" Property="Author" Title="著者 / Author">
+                            <Template Context="work">
+                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P">
+                                    @(work.Author)
+                                </RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.P">
+                                    @(work.AuthorYomi)
+                                </RadzenText>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="Language" Title="言語 / Language">
+                            <Template Context="work">
+                                <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
+                                    <RadzenBadge BadgeStyle=@(work.GetLanguageBadgeStyle()) Text=@(work.GetLanguageScreenName()) />
+                                </RadzenText>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="WorkUri" Sortable="false" Filterable="false" Title="ソース / Source">
+                            <Template Context="work">
+                                <RadzenButton Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </Animate>
+        }
+    </article>
+</Animate>
 
 @code {
-    private WorkData[]? works;
+    private List<WorkData> works;
 
     protected override async Task OnInitializedAsync()
     {
-        works = await Http.GetFromJsonAsync<WorkData[]>("works-metadata/works.json");
-    }
-
-    public class WorkData
-    {
-        public string WorkId { get; set; }
-
-        public string Title { get; set; }
-
-        public string TitleYomi { get; set; }
-
-        public string Author { get; set; }
-
-        public string AuthorYomi { get; set; }
-
-        public Uri WorkUri { get; set; }
+        var data = await Http.GetFromJsonAsync<WorkMetadata>("jsondata/works.json");
+        works = data.WorkList;
     }
 
 }

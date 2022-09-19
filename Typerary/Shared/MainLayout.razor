@@ -1,17 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<main>
+    <RadzenCard Class="mb-5 navbar mr-auto fixed-top container-fluid">
+        <NavLink href="/" class="navbar-brand rz-ripple rz-color-danger-darker" style="text-decoration: none">Typerary</NavLink>
+        <RadzenMenu class="mr-auto">
+            <RadzenMenuItem Text="About" Path="/about" Icon="info"></RadzenMenuItem>
+            <RadzenMenuItem Text="Release" Path="/release" Icon="update"></RadzenMenuItem>
+            <RadzenMenuItem Text="Works" Path="/works" Icon="book"></RadzenMenuItem>
+        </RadzenMenu>
+    </RadzenCard>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+    @Body
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+</main>

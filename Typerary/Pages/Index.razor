@@ -1,9 +1,24 @@
-ï»¿@page "/"
+@page "/"
+@using Radzen
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Typerary - Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+    <div class="container-fluid m-5">
+        <div class="row">
+            <div class="col col-lg-5">
+                <article class="content text-center p-5 body-index-bg-alpha rz-border-radius-8">
 
-Welcome to your new app.
+                    <RadzenText TextStyle="TextStyle.DisplayH2" class="p-3 index-text-shadow">Typerary</RadzenText>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+                    <RadzenText TextStyle="TextStyle.H5" class="p-3 index-text-shadow">ƒ^ƒCƒsƒ“ƒO‚Å–¡‚í‚¤•¶Šwì•i‚Ì¢ŠE</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">‚æ‚¤‚±‚»ATyperary iƒ^ƒCƒvƒ‰ƒŠ[j‚ÖB</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">–{}‘ŠÙ‚ÍA•¶Šwì•i‚ğƒ^ƒCƒsƒ“ƒO‚·‚é‚±‚Æ‚ª‚Å‚«‚é</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">•—•Ï‚í‚è‚È}‘ŠÙ‚Æ‚È‚Á‚Ä‚¨‚è‚Ü‚·B</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1" class="p-1" Style="font-size: medium; font-weight: bold">‚²‚ä‚Á‚­‚è‚¨–ù‚µ‚İ‚­‚¾‚³‚¢‚Ü‚¹B</RadzenText>
+                </article>
+            </div>
+            <div class="col col-lg-6"></div>
+        </div>
+    </div>
+</Animate>
