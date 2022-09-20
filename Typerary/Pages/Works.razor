@@ -1,5 +1,6 @@
 @page "/works"
 @inject HttpClient Http
+@inject IJSRuntime jsRuntime
 
 <PageTitle>Typerary - Works</PageTitle>
 
@@ -51,7 +52,7 @@
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="WorkUri" Sortable="false" Filterable="false" Title="ソース / Source">
                             <Template Context="work">
-                                <RadzenButton Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
+                                <RadzenButton Click=@(args => OnClickResourceButton(work.WorkUri.ToString())) Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
                             </Template>
                         </RadzenDataGridColumn>
                     </Columns>
@@ -68,6 +69,10 @@
     {
         var data = await Http.GetFromJsonAsync<WorkMetadata>("jsondata/works.json");
         works = data.WorkList;
+    }
+
+    async void OnClickResourceButton(string url){
+        await jsRuntime.InvokeAsync<object>("open", url, "_blank");
     }
 
 }
