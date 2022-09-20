@@ -1,0 +1,68 @@
+﻿@page "/release"
+@inject HttpClient Http
+
+<PageTitle>Typerary - Release</PageTitle>
+
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
+
+        <RadzenText TextStyle="TextStyle.H3">更新履歴</RadzenText>
+
+
+        @if (releaseHistories == null)
+        {
+            <div class="loader">Loading...</div>
+        }
+        else
+        {
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+                <RadzenCard>
+                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@releaseHistories" TItem="ReleaseHistory" PageSize="20" PageNumbersCount="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                        <Template Context="release">
+                            <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-3 p-3 release-date">
+                                            <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H6" Class="rz-color-warning-darker">
+                                                @(release.GetUpdateDateTime().ToString("yyyy/MM/dd"))
+                                            </RadzenText>
+                                            <RadzenBadge BadgeStyle="BadgeStyle.Warning" Shade="Shade.Dark">
+                                                <div style=" display: flex; align-items: center; text-transform: none;" class="p-1">
+                                                    <RadzenIcon Icon="history_edu" /> <span style="font-size: medium">Version @(release.Version)</span>
+                                                </div>
+                                            </RadzenBadge>
+                                        </div>
+                                        <div class="col-lg-9 p-3">
+                                            <Emoji>
+                                                <p>@((MarkupString)Markdown.ToHtml(release.DetailText))</p>
+                                            </Emoji>
+                                        </div>
+                                    </div>
+                                </div>
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenCard>
+            </Animate>
+        }
+
+        <style>
+            .release-date {
+                min-height: 72px;
+                background-color: var(--rz-warning-lighter);
+            }
+        </style>
+    </article>
+</Animate>
+
+@code {
+    private List<ReleaseHistory> releaseHistories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await Http.GetFromJsonAsync<ReleaseHistoryMetadata>("jsondata/update-history.json");
+        releaseHistories = data.Histories;
+        releaseHistories.Sort((obj1, obj2) => obj1.GetUpdateDateTime() < obj2.GetUpdateDateTime() ? 1 : -1);
+    }
+
+}
