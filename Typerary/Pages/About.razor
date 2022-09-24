@@ -4,17 +4,27 @@
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-        <div class="text-center">
-            <RadzenText TextStyle="TextStyle.H3">本図書館について</RadzenText>
+        <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-3 article-heading" data-en="About">本図書館について</RadzenText>
 
-        </div>
+        <RadzenText TextStyle="TextStyle.Body1">Typerary は、文学作品をタイピングの練習材料として提供しているWEBサービスです。</RadzenText>
 
-        <RadzenCard class="m-3">
+        長い文章のタイピング練習をしよう
+
+        長い文章を正確に写す練習を行い、誤字・脱字の少ない文章入力スキルを磨くことができます。
+
+        文学作品に触れよう
+
+        文学作品を通して、現代にも通じる思想や、人々が抱く感情に触れる体験や、洗練された文体、表現、語彙を味わうことができれば幸いです。
+
+        <RadzenText TextStyle="TextStyle.H4" class="mb-3">取り扱っている作品について</RadzenText>
+        <RadzenText TextStyle="TextStyle.Body1">Typerary で取り扱っている文学作品は以下のサイトを参照しています。</RadzenText>
+
+        <RadzenCard class="m-5">
             <div class="d-flex flex-row">
                 <RadzenImage Path="./fursona.jpg" Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
                 <div>
-                    <h3 class="h5">司書 / Librarian</h3>
-                    <div class="h5">ハク</div>
+                    <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">司書 / Librarian</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1"><b>ハク</b></RadzenText>
                     <div class="mt-3">
                         狐の獣人。昼寝とおいしい食べ物を食べることが好き。
                     </div>
