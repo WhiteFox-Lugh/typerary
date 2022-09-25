@@ -1,15 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
 <main>
-    <RadzenCard Class="mb-5 navbar mr-auto fixed-top container-fluid">
-        <NavLink href="/" class="navbar-brand rz-ripple rz-color-danger-darker" style="text-decoration: none">Typerary</NavLink>
+    <RadzenCard Class="mb-5 navbar fixed-top container-fluid">
+        <RadzenLink Path="/" Text="Typerary" class="navbar-brand rz-ripple rz-color-danger-darker" style="text-decoration: none" />
         <RadzenMenu class="mr-auto">
             <RadzenMenuItem Text="About" Path="/about" Icon="info"></RadzenMenuItem>
-            <RadzenMenuItem Text="Release" Path="/release" Icon="update"></RadzenMenuItem>
+            <RadzenMenuItem Text="History" Path="/history" Icon="update"></RadzenMenuItem>
             <RadzenMenuItem Text="Works" Path="/works" Icon="book"></RadzenMenuItem>
         </RadzenMenu>
     </RadzenCard>
 
     @Body
 
+    <footer class="footer border-0" style="background-color: rgba(255, 255, 255, 0)">
+        <div class="container-fluid m-5">
+            <RadzenText TextStyle="TextStyle.Body1" class="rz-color-white cormonant">Copyright Since 2022 (C) WhiteFox-Lugh All rights reserved.</RadzenText>
+        </div>
+    </footer>
 </main>

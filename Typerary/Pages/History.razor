@@ -1,12 +1,12 @@
-@page "/release"
+@page "/history"
 @inject HttpClient Http
 
-<PageTitle>Typerary - Release</PageTitle>
+<PageTitle>Typerary - History</PageTitle>
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
 
-        <RadzenText TextStyle="TextStyle.H3">更新履歴</RadzenText>
+        <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-5 article-heading" data-en="History">更新履歴</RadzenText>
 
         @if (releaseHistories == null)
         {
@@ -15,7 +15,7 @@
         else
         {
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenCard>
+                <RadzenCard class="mt-5">
                     <RadzenDataList WrapItems="true" AllowPaging="true" Data="@releaseHistories" TItem="ReleaseHistory" PageSize="20" PageNumbersCount="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
                         <Template Context="release">
                             <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
