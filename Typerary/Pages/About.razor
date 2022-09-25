@@ -29,7 +29,7 @@
 
                         </div>
                         <div class="col-lg">
-                            <RadzenImage Path="./about_img_1.jpg" Class="rz-border-radius-5 float-center mr-3" />
+                            <RadzenImage Path="./img/about_img_1.jpg" Class="rz-border-radius-5 float-center mr-3" />
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg">
-                            <RadzenImage Path="./about_img_2.jpg" Class="rz-border-radius-5 float-center mr-3" />
+                            <RadzenImage Path="./img/about_img_2.jpg" Class="rz-border-radius-5 float-center mr-3" />
                         </div>
                         <div class="col-lg text-left align-self-center p-5">
                             <RadzenText TextStyle="TextStyle.DisplayH6" TagName="TagName.H6" class="m-3 head-left-line">
@@ -144,7 +144,7 @@
                             <RadzenCard class="m-5 py-5 px-3 rz-border-radius-4 rz-shadow-3 text-left">
                                 <div class="d-flex flex-row mx-4">
                                     <div class="col-lg">
-                                        <RadzenImage Path="./fursona.jpg" Class="rounded-circle float-left mr-3" Style="width: 150px; height: 150px;" />
+                                        <RadzenImage Path="./img/fursona.jpg" Class="rounded-circle float-left mr-3" Style="width: 150px; height: 150px;" />
                                         <div>
                                             <RadzenText TextStyle="TextStyle.Overline" Class="mt-1">司書 / Librarian</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Body1"><b>ハク（白狐）</b></RadzenText>
@@ -178,7 +178,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var tosData = await Http.GetAsync("./tos.md");
+        var tosData = await Http.GetAsync("./misc/tos.md");
         if (tosData.StatusCode != System.Net.HttpStatusCode.OK){
             tos.Append(DefaultString);
             return;
