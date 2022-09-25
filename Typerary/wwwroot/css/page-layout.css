@@ -31,11 +31,30 @@
         transform: rotate(-2deg);
         top: 0;
         left: 0;
-        color: rgb(255, 106, 0);
+        color: rgb(255, 200, 120);
         z-index: -1;
         font-size: 100px;
         font-weight: 500;
         font-family: 'Miss Fajardose', cursive;
     }
 
+.head-underline {
+    position: relative;
+    padding: 1.5rem;
+}
 
+    .head-underline:before {
+        position: absolute;
+        bottom: -10px;
+        left: calc(50% - 60px);
+        width: 120px;
+        height: 3px;
+        content: '';
+        border-radius: 3px;
+        background: #55402b;
+    }
+
+.head-left-line {
+    padding: 1rem 2rem;
+    border-left: 4px solid #55402b;
+}

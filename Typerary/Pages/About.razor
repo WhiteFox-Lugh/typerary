@@ -3,33 +3,127 @@
 <PageTitle>Typerary - About</PageTitle>
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
-    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-        <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-3 article-heading" data-en="About">本図書館について</RadzenText>
+    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3 align-items-center text-center">
 
-        <RadzenText TextStyle="TextStyle.Body1">Typerary は、文学作品をタイピングの練習材料として提供しているWEBサービスです。</RadzenText>
+        <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-5 article-heading" data-en="About">Typerary について</RadzenText>
 
-        長い文章のタイピング練習をしよう
+        <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="my-5">Typerary は、文学作品をタイピング練習できる WEB サービスです。</RadzenText>
 
-        長い文章を正確に写す練習を行い、誤字・脱字の少ない文章入力スキルを磨くことができます。
+        <RadzenCard class="m-5 p-5 rz-border-radius-3 rz-shadow-5">
 
-        文学作品に触れよう
+            <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="my-5 head-underline">特徴</RadzenText>
 
-        文学作品を通して、現代にも通じる思想や、人々が抱く感情に触れる体験や、洗練された文体、表現、語彙を味わうことができれば幸いです。
+            <div class="d-flex flex-row my-5">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg text-left align-self-center p-5">
+                            <RadzenText TextStyle="TextStyle.DisplayH6" TagName="TagName.H6" class="m-3 head-left-line">
+                                実際の文章入力に近い形式のタイピング練習
+                            </RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1" class="m-3">
+                                実際の文章入力に近い形式で練習ができるように設計をしてあります。
+                                長文の入力に特化した練習を行い、正確に速く文章を入力するスキルを磨くことができます。
+                            </RadzenText>
 
-        <RadzenText TextStyle="TextStyle.H4" class="mb-3">取り扱っている作品について</RadzenText>
-        <RadzenText TextStyle="TextStyle.Body1">Typerary で取り扱っている文学作品は以下のサイトを参照しています。</RadzenText>
-
-        <RadzenCard class="m-5">
-            <div class="d-flex flex-row">
-                <RadzenImage Path="./fursona.jpg" Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
-                <div>
-                    <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">司書 / Librarian</RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1"><b>ハク</b></RadzenText>
-                    <div class="mt-3">
-                        狐の獣人。昼寝とおいしい食べ物を食べることが好き。
+                        </div>
+                        <div class="col-lg">
+                            <RadzenImage Path="./about_img_1.jpg" Class="rz-border-radius-5 float-center mr-3" />
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="d-flex flex-row my-5">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg">
+                            <RadzenImage Path="./about_img_2.jpg" Class="rz-border-radius-5 float-center mr-3" />
+                        </div>
+                        <div class="col-lg text-left align-self-center p-5">
+                            <RadzenText TextStyle="TextStyle.DisplayH6" TagName="TagName.H6" class="m-3 head-left-line">
+                                文学作品に触れられる
+                            </RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1" class="m-3">
+                                文学作品を通して、現代にも通じる思想を学んだり、人々が抱く感情に触れたり、洗練された文体、表現、語彙を味わったりすることができます。
+                            </RadzenText>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H4" class="my-5 head-underline">取り扱っている作品について</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1">Typerary で取り扱っている文学作品は以下のサイトを参照しています。</RadzenText>
+
+            本サイトは PC での閲覧に最適化されています。モバイル端末での利用は非推奨です。
+
+
+            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H4" class="my-5 head-underline">利用規約</RadzenText>
+
+            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H4" class="my-5 head-underline">お借りしたもの</RadzenText>
+
+            <RadzenCard class="m-5 rz-shadow-0">
+                <div class="d-flex flex-row">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg">
+                                <div class="card-header rz-background-color-warning-lighter">
+                                    <RadzenText TextStyle="TextStyle.H5">文章</RadzenText>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <RadzenLink Path="https://www.aozora.gr.jp/" Text="青空文庫" />
+                                    </li>
+                                    <li class="list-group-item">
+                                        <RadzenLink Path="https://www.gutenberg.org/" Text="Project Gutenberg" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg">
+                                <div class="card-header rz-background-color-warning-lighter">
+                                    <RadzenText TextStyle="TextStyle.H5">画像</RadzenText>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <RadzenLink Path="https://unsplash.com/ja/%E5%86%99%E7%9C%9F/1ZO0QLfGe0g?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink" Text="背景画像" />
+                                    </li>
+                                    <li class="list-group-item">
+                                        <RadzenLink Path="https://unsplash.com/ja/%E5%86%99%E7%9C%9F/yFbyvpEGHFQ?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink" Text="挿入画像（タイピング）" />
+                                    </li>
+                                    <li class="list-group-item">
+                                        <RadzenLink Path="https://unsplash.com/ja/%E5%86%99%E7%9C%9F/726BIW8ArvM?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink" Text="挿入画像（本）" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenCard>
+
+            <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H4" class="my-5 head-underline">開発者</RadzenText>
+
+            <RadzenCard class="m-5 p-5 rz-shadow-0 text-left">
+                <div class="d-flex flex-row mx-5">
+                    <div class="col-lg">
+                        <RadzenImage Path="./fursona.jpg" Class="rounded-circle float-left mr-3" Style="width: 150px; height: 150px;" />
+                        <div>
+                            <RadzenText TextStyle="TextStyle.Overline" Class="mt-1">司書 / Librarian</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1"><b>ハク</b></RadzenText>
+                            <div class="mt-3">
+                                狐の獣人。昼寝とおいしい食べ物を食べることが好き。
+                            </div>
+                        </div>
+                    </div>
+                    <RadzenCard Class="rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0 ml-2" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
+                        <RadzenText TextStyle="TextStyle.H6" Class="rz-color-primary-light"><strong>Account</strong></RadzenText>
+                        <div class="col-lg">
+                            <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">GitHub</RadzenText>
+                            <RadzenLink Path="https://github.com/WhiteFox-Lugh" Text="WhiteFox-Lugh" />
+                            <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Twitter</RadzenText>
+                            <RadzenLink Path="https://twitter.com/Arthur_Lugh" Text="Arthur_Lugh" />
+                        </div>
+                    </RadzenCard>
+                </div>
+            </RadzenCard>
         </RadzenCard>
     </article>
 </Animate>
