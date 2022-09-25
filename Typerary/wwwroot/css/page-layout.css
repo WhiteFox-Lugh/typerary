@@ -11,6 +11,10 @@
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+.body-about-bg-alpha {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 .body-index-bg-alpha {
     background-color: rgba(255, 250, 240, 0.7);
 }
@@ -31,7 +35,7 @@
         transform: rotate(-2deg);
         top: 0;
         left: 0;
-        color: rgb(255, 200, 120);
+        color: rgb(255, 220, 200);
         z-index: -1;
         font-size: 100px;
         font-weight: 500;
