@@ -34,9 +34,19 @@
             Console.WriteLine(sanitizedId);
             var data = await Http.GetAsync($"jsondata/works/{sanitizedId}.json");
         }
-        catch (FileNotFoundException ex)
+        catch (HttpRequestException ex)
         {
-            Console.WriteLine(ex);
+            Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
+            Nav.NavigateTo("/works");
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
+            Nav.NavigateTo("/works");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception \n{ex.Message}");
             Nav.NavigateTo("/works");
         }
     }
