@@ -1,0 +1,44 @@
+﻿@page "/book/{BookId}"
+@inject HttpClient Http
+@inject NavigationManager Nav;
+
+<PageTitle>Typerary - Book</PageTitle>
+
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
+        @if (works == null)
+        {
+            <div class="loader">Loading...</div>
+        }
+        else
+        {
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+
+            </Animate>
+        }
+    </article>
+</Animate>
+
+@code {
+    private List<WorkData> works;
+
+    [Parameter]
+    public string BookId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var sanitizer = new HtmlSanitizer();
+            var sanitizedId = sanitizer.Sanitize(BookId);
+            Console.WriteLine(sanitizedId);
+            var data = await Http.GetAsync($"jsondata/works/{sanitizedId}.json");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine(ex);
+            Nav.NavigateTo("/works");
+        }
+    }
+
+}

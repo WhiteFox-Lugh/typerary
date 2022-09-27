@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Typerary", "Typerary\Typerary.csproj", "{C1108CEF-03D5-45BB-862B-C6DB1E824D0E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TyperaryTest", "TyperaryTest\TyperaryTest.csproj", "{A59C90C5-BBB0-4B10-9AFB-45AC0C282802}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

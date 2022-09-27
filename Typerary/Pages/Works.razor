@@ -1,6 +1,7 @@
 @page "/works"
 @inject HttpClient Http
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Nav;
 
 <PageTitle>Typerary - Works</PageTitle>
 
@@ -26,7 +27,7 @@
                         <RadzenDataGridColumn Width="40%" TItem="WorkData" Property="TitleYomi" Title="作品名 / Title">
                             <Template Context="work">
                                 <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="rz-color-primary-darker">
-                                    @(work.Title)
+                                    <RadzenLink Path=@GetUrl(work.WorkId) Text=@(work.Title) />
                                 </RadzenText>
                                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" class="rz-color-primary-darker">
                                     @(work.SubTitle)
@@ -71,8 +72,12 @@
         works = data.WorkList;
     }
 
+    private string GetUrl(string bookId){
+        return $"/book/{bookId}";
+    }
+
     async void OnClickResourceButton(string url){
-        await jsRuntime.InvokeAsync<object>("open", url, "_blank");
+        await JsRuntime.InvokeAsync<object>("open", url, "_blank");
     }
 
 }
