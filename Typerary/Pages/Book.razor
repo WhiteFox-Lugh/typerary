@@ -6,14 +6,26 @@
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-        @if (works == null)
+        <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">本のタイトル</RadzenText>
+        @if (false)
         {
             <div class="loader">Loading...</div>
         }
         else
         {
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
+                            <RadzenTextArea Rows=10 class="w-100" Style="font-size: 1.5rem" Value=@(taskSentence) ReadOnly/>
+                        </div>
+                        <div class="col">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
+                            <RadzenTextArea Rows=10 class="w-100" Style="font-size: 1.5rem" @oninput=@(args => OnInput(args.Value.ToString()))/>
+                        </div>
+                    </div>
+                </div>
             </Animate>
         }
     </article>
@@ -21,6 +33,7 @@
 
 @code {
     private List<WorkData> works;
+    private string taskSentence;
 
     [Parameter]
     public string BookId { get; set; }
@@ -31,24 +44,26 @@
         {
             var sanitizer = new HtmlSanitizer();
             var sanitizedId = sanitizer.Sanitize(BookId);
-            Console.WriteLine(sanitizedId);
             var data = await Http.GetAsync($"jsondata/works/{sanitizedId}.json");
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
-            Nav.NavigateTo("/works");
+            //Nav.NavigateTo("/works", false);
         }
         catch (TaskCanceledException ex)
         {
             Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
-            Nav.NavigateTo("/works");
+            //Nav.NavigateTo("/works", false);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Exception \n{ex.Message}");
-            Nav.NavigateTo("/works");
+            //Nav.NavigateTo("/works", false);
         }
     }
 
+    private void OnInput(string value){
+        Console.WriteLine(value);
+    }
 }
