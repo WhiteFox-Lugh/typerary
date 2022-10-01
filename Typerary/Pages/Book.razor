@@ -18,11 +18,13 @@
                     <div class="row">
                         <div class="col">
                             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
-                            <RadzenTextArea Rows=10 class="w-100" Style="font-size: 1.5rem" Value=@(taskSentence) ReadOnly/>
+                            <p class="w-100 my-3" Style="font-size: 1.5rem; line-height: 2em">
+                                @((MarkupString)Markdown.ToHtml(taskSentences[idx]))
+                            </p>
                         </div>
                         <div class="col">
                             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
-                            <RadzenTextArea Rows=10 class="w-100" Style="font-size: 1.5rem" @oninput=@(args => OnInput(args.Value.ToString()))/>
+                            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.5rem" @onkeypress=@(args => OnKeyPress(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString()))/>
                         </div>
                     </div>
                 </div>
@@ -33,7 +35,12 @@
 
 @code {
     private List<WorkData> works;
-    private string taskSentence;
+    private int idx;
+    private List<string> taskSentences = new() {
+        "これは、<ruby><rb>私</rb><rp>（</rp><rt>わたし</rt><rp>）</rp></ruby>が小さいときに、村の<ruby><rb>茂平</rb><rp>（</rp><rt>もへい</rt><rp>）</rp></ruby>というおじいさんからきいたお話です。",
+        "むかしは、私たちの村のちかくの、<ruby><rb>中山</rb><rp>（</rp><rt>なかやま</rt><rp>）</rp></ruby>というところに小さなお城があって、中山さまというおとのさまが、おられたそうです。",
+        "その中山から、少しはなれた山の中に、「ごん<ruby><rb>狐</rb><rp>（</rp><rt>ぎつね</rt><rp>）</rp></ruby>」という狐がいました。ごんは、<ruby><rb>一人</rb><rp>（</rp><rt>ひとり</rt><rp>）</rp></ruby>ぼっちの小狐で、しだの一ぱいしげった森の中に穴をほって住んでいました。そして、夜でも昼でも、あたりの村へ出てきて、いたずらばかりしました。はたけへ入って芋をほりちらしたり、<ruby><rb>菜種</rb><rp>（</rp><rt>なたね</rt><rp>）</rp></ruby>がらの、ほしてあるのへ火をつけたり、<ruby><rb>百姓家</rb><rp>（</rp><rt>ひゃくしょうや</rt><rp>）</rp></ruby>の裏手につるしてあるとんがらしをむしりとって、いったり、いろんなことをしました。"
+    };
 
     [Parameter]
     public string BookId { get; set; }
@@ -63,7 +70,25 @@
         }
     }
 
-    private void OnInput(string value){
+    private void OnKeyPress(KeyboardEventArgs keyEvent){
+        var key = keyEvent.Key;
+        var isCtrl = keyEvent.CtrlKey;
+        Console.WriteLine($"Key -> {key.ToString()}, isCtrl -> {isCtrl.ToString()}");
+        if (isCtrl && key.Equals("Enter")){
+            idx = (idx + 1 < taskSentences.Count) ? idx + 1 : idx;
+        }
+    }
+
+    private void OnInput(string? value){
+        if (value is null) return;
         Console.WriteLine(value);
+    }
+
+    private void OnCopy(){
+        Console.WriteLine("Copy detected");
+    }
+
+    private void OnPaste(){
+        Console.WriteLine("Paste Detected");
     }
 }
