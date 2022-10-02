@@ -6,20 +6,20 @@
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-        <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">本のタイトル</RadzenText>
         @if (false)
         {
             <div class="loader">Loading...</div>
         }
         else
         {
+            <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
                             <p class="w-100 my-3" Style="font-size: 1.5rem; line-height: 2em">
-                                @((MarkupString)Markdown.ToHtml(taskSentences[idx]))
+                                @((MarkupString)Markdown.ToHtml(currentTaskSentence))
                             </p>
                         </div>
                         <div class="col">
@@ -34,13 +34,11 @@
 </Animate>
 
 @code {
-    private List<WorkData> works;
-    private int idx;
-    private List<string> taskSentences = new() {
-        "これは、<ruby><rb>私</rb><rp>（</rp><rt>わたし</rt><rp>）</rp></ruby>が小さいときに、村の<ruby><rb>茂平</rb><rp>（</rp><rt>もへい</rt><rp>）</rp></ruby>というおじいさんからきいたお話です。",
-        "むかしは、私たちの村のちかくの、<ruby><rb>中山</rb><rp>（</rp><rt>なかやま</rt><rp>）</rp></ruby>というところに小さなお城があって、中山さまというおとのさまが、おられたそうです。",
-        "その中山から、少しはなれた山の中に、「ごん<ruby><rb>狐</rb><rp>（</rp><rt>ぎつね</rt><rp>）</rp></ruby>」という狐がいました。ごんは、<ruby><rb>一人</rb><rp>（</rp><rt>ひとり</rt><rp>）</rp></ruby>ぼっちの小狐で、しだの一ぱいしげった森の中に穴をほって住んでいました。そして、夜でも昼でも、あたりの村へ出てきて、いたずらばかりしました。はたけへ入って芋をほりちらしたり、<ruby><rb>菜種</rb><rp>（</rp><rt>なたね</rt><rp>）</rp></ruby>がらの、ほしてあるのへ火をつけたり、<ruby><rb>百姓家</rb><rp>（</rp><rt>ひゃくしょうや</rt><rp>）</rp></ruby>の裏手につるしてあるとんがらしをむしりとって、いったり、いろんなことをしました。"
-    };
+    private string bookTitle = "";
+    private int idx = 0;
+    private Typerary.Shared.BookData[] bookData;
+    private List<string> taskSentences = new();
+    private string currentTaskSentence = "";
 
     [Parameter]
     public string BookId { get; set; }
@@ -51,7 +49,18 @@
         {
             var sanitizer = new HtmlSanitizer();
             var sanitizedId = sanitizer.Sanitize(BookId);
-            var data = await Http.GetAsync($"jsondata/works/{sanitizedId}.json");
+            var jsonData = await Http.GetFromJsonAsync<Typerary.Shared.Book>($"jsondata/works/{sanitizedId}.json");
+            bookTitle = jsonData.Title;
+            bookData = jsonData.Content;
+            foreach (var section in bookData){
+                foreach (var sentence in section.Sentences){
+                    taskSentences.Add(sentence.OriginSentence);
+                }
+            }
+            currentTaskSentence = taskSentences[0];
+            foreach (var sentence in taskSentences){
+                Console.WriteLine(sentence);
+            }
         }
         catch (HttpRequestException ex)
         {
@@ -76,6 +85,7 @@
         Console.WriteLine($"Key -> {key.ToString()}, isCtrl -> {isCtrl.ToString()}");
         if (isCtrl && key.Equals("Enter")){
             idx = (idx + 1 < taskSentences.Count) ? idx + 1 : idx;
+            currentTaskSentence = taskSentences[idx];
         }
     }
 
