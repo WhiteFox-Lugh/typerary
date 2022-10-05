@@ -18,21 +18,60 @@
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
 
-                            <div class="container-fluid">
-                                <div class="row">
+                            <div class="container-fluid my-2">
+                                <div class="row rz-border-radius-5">
                                     <div class="col">
                                         <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
-                                        <p class="w-100 my-3" Style="font-size: 1.5rem; line-height: 2em">
+                                        <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em">
                                             @((MarkupString)Markdown.ToHtml(currentTaskSentence))
                                         </p>
                                     </div>
                                     <div class="col">
                                         <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
-                                        <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.5rem" @onkeypress=@(args => OnKeyPress(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
+                                        <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @onkeypress=@(args => OnKeyPress(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="container-fluid mt-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <RadzenRadialGauge>
+                                            <RadzenRadialGaugeScale StartAngle="-90" EndAngle="90" Step="@(timeLimit / TimeTickDivision)" Min="0" Max=@timeLimit TickPosition=@tickPosition>
+                                                <RadzenRadialGaugeScalePointer Value=@restTime Length="0.6" ShowValue=@showValue>
+                                                    <Template Context="pointer">
+                                                        <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="cormonant">
+                                                            Remaining time: @pointer.Value sec.
+                                                        </RadzenText>
+                                                    </Template>
+                                                </RadzenRadialGaugeScalePointer>
+                                                <RadzenRadialGaugeScaleRange From="0" To=@(timeLimit * TimeTickRed / 100) Fill="red" />
+                                                <RadzenRadialGaugeScaleRange From=@(timeLimit * TimeTickRed / 100) To=@(timeLimit * TimeTickOrange / 100) Fill="orange" />
+                                                <RadzenRadialGaugeScaleRange From=@(timeLimit * TimeTickOrange / 100) To=@timeLimit Fill="green" />
+                                            </RadzenRadialGaugeScale>
+                                        </RadzenRadialGauge>
+                                    </div>
+                                    <div class="col">
+                                        <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="cormonant">
+                                            Commands:
+                                        </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="cormonant">
+                                            ・Ctrl + Enter : Next Line
+                                        </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="cormonant">
+                                            ・F2 → F2 : Quit
+                                        </RadzenText>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Config">
+                            <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-3 cormonant">Config</RadzenText>
+                        </RadzenTabsItem>
+
                         <RadzenTabsItem Text="Result">
                             <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-3 cormonant">Result</RadzenText>
                             <RadzenArcGauge Style="width: 100%; height: 200px;">
@@ -58,6 +97,12 @@
     double value = 99.3;
     IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
     GaugeTickPosition tickPosition = GaugeTickPosition.Outside;
+
+    private const int TimeTickDivision = 10;
+    private const int TimeTickRed = 20;
+    private const int TimeTickOrange = 50;
+    private int timeLimit = 60 * 60;
+    private int restTime = 300;
 
     private string bookTitle = "";
     private int idx = 0;
