@@ -17,15 +17,19 @@
                 <RadzenTabs @bind-SelectedIndex=@tabIndex>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
-                            <Practice TaskSentences=@taskSentences />
+                            <Practice BookData=@(Book.bookData) />
                         </RadzenTabsItem>
 
                         <RadzenTabsItem Text="Config">
                             <Config />
                         </RadzenTabsItem>
 
-                        <RadzenTabsItem Text="Result">
+                        <RadzenTabsItem Text="Result(Summary)">
                             <SummaryResult />
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Result(Detail)">
+                            <DetailResult />
                         </RadzenTabsItem>
                     </Tabs>
                 </RadzenTabs>
@@ -35,12 +39,11 @@
 </Animate>
 
 @code {
-    private bool isLoadComplete = false;
-    private string bookTitle = "";
-    private Typerary.Shared.BookData[] bookData;
-    private List<string> taskSentences = new();
-
-    private int tabIndex = 0;
+    private static bool isLoadComplete = false;
+    private static string bookTitle = "";
+    private static Typerary.Shared.BookData[] bookData;
+    private static List<string> taskSentences = new();
+    private static int tabIndex = 0;
 
     [Parameter]
     public string BookId { get; set; }
@@ -83,12 +86,5 @@
 
         bookTitle = jsonData.Title;
         bookData = jsonData.Content;
-        foreach (var section in bookData)
-        {
-            foreach (var sentence in section.Sentences)
-            {
-                taskSentences.Add(sentence.OriginSentence);
-            }
-        }
     }
 }
