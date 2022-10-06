@@ -1,0 +1,96 @@
+﻿<div class="container-fluid my-2">
+    <div class="row rz-border-radius-5">
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
+            <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em">
+                @((MarkupString)Markdown.ToHtml(currentTaskSentence))
+            </p>
+        </div>
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
+            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @onkeypress=@(args => OnKeyPress(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col">
+            <RadzenRadialGauge>
+                <RadzenRadialGaugeScale StartAngle="-90" EndAngle="90" Step="@(timeLimit / TimeTickDivision)" Min="0" Max=@timeLimit TickPosition=@tickPosition>
+                    <RadzenRadialGaugeScalePointer Value=@restTime Length="0.6" ShowValue="true">
+                        <Template Context="pointer">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="cormonant">
+                                Remaining time: @pointer.Value sec.
+                            </RadzenText>
+                        </Template>
+                    </RadzenRadialGaugeScalePointer>
+                    <RadzenRadialGaugeScaleRange From="0" To=@(timeLimit * TimeTickRed / 100) Fill="red" />
+                    <RadzenRadialGaugeScaleRange From=@(timeLimit * TimeTickRed / 100) To=@(timeLimit * TimeTickOrange / 100) Fill="orange" />
+                    <RadzenRadialGaugeScaleRange From=@(timeLimit * TimeTickOrange / 100) To=@timeLimit Fill="green" />
+                </RadzenRadialGaugeScale>
+            </RadzenRadialGauge>
+        </div>
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="cormonant">
+                Commands:
+            </RadzenText>
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="cormonant">
+                ・Ctrl + Enter : Next Line
+            </RadzenText>
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="cormonant">
+                ・F2 → F2 : Quit
+            </RadzenText>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    private const int TimeTickDivision = 10;
+    private const int TimeTickRed = 20;
+    private const int TimeTickOrange = 50;
+
+    private string currentTaskSentence = "";
+    private int timeLimit = 60 * 60;
+    private int restTime = 300;
+    private int idx = 0;
+
+    GaugeTickPosition tickPosition = GaugeTickPosition.Outside;
+    IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
+
+    [Parameter]
+    public List<string> TaskSentences { get; set; }
+
+    protected override async Task OnInitializedAsync(){
+        currentTaskSentence = TaskSentences[0];
+    }
+
+    protected void OnKeyPress(KeyboardEventArgs keyEvent)
+    {
+        var key = keyEvent.Key;
+        var isCtrl = keyEvent.CtrlKey;
+        Console.WriteLine($"Key -> {key.ToString()}, isCtrl -> {isCtrl.ToString()}");
+        if (isCtrl && key.Equals("Enter"))
+        {
+            idx = (idx + 1 < TaskSentences.Count) ? idx + 1 : idx;
+            currentTaskSentence = TaskSentences[idx];
+        }
+    }
+
+    private void OnInput(string? value)
+    {
+        if (value is null) return;
+        Console.WriteLine(value);
+    }
+
+    private void OnCopy()
+    {
+        Console.WriteLine("Copy detected");
+    }
+
+    private void OnPaste()
+    {
+        Console.WriteLine("Paste Detected");
+    }
+}

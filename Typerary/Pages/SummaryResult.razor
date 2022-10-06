@@ -1,0 +1,16 @@
+﻿<RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-3 cormonant">Result</RadzenText>
+<RadzenArcGauge Style="width: 100%; height: 200px;">
+    <RadzenArcGaugeScale Step="0.50" Min="95" Max="100" MinorStep="0.1" Radius="1.5" TickPosition=@tickPosition Y="0.9" Margin="0">
+        <RadzenArcGaugeScaleValue Value=@accuracy ShowValue=@showValue>
+            <Template Context="pointer">
+                <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">Accuracy @(pointer.Value.ToString("0.00")) %</RadzenText>
+            </Template>
+        </RadzenArcGaugeScaleValue>
+    </RadzenArcGaugeScale>
+</RadzenArcGauge>
+
+@code {
+    bool showValue = true;
+    double accuracy = 99.3;
+    GaugeTickPosition tickPosition = GaugeTickPosition.Outside;
+}
