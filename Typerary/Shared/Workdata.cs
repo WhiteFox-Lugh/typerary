@@ -2,7 +2,7 @@
 {
     public class WorkMetadata
     {
-        public List<WorkData> WorkList { get; set; }
+        public List<WorkData>? WorkList { get; set; }
     }
 
     public class WorkData
@@ -16,22 +16,22 @@
         public Radzen.BadgeStyle GetLanguageBadgeStyle() => langToDisplayString.ContainsKey(Language) ? langToDisplayString[Language].badgeStyle : DefaultBadgeStyle;
 
 
-        public string WorkId { get; set; }
+        public string? WorkId { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string TitleYomi { get; set; }
+        public string? TitleYomi { get; set; }
 
         public string? SubTitle { get; set; }
 
-        public string Author { get; set; }
+        public string? Author { get; set; }
 
         public string? AuthorYomi { get; set; }
 
-        public string Language { get; set; }
+        public string? Language { get; set; }
 
-        public string Source { get; set; }
+        public string? Source { get; set; }
 
-        public Uri WorkUri { get; set; }
+        public Uri? WorkUri { get; set; }
     }
 }

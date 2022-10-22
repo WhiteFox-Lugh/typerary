@@ -55,30 +55,29 @@
 </Animate>
 
 @code {
-    private List<ReleaseHistory> releaseHistories;
+    private const string MetadataJsonUri = "jsondata/update-history.json";
+    private List<ReleaseHistory>? releaseHistories;
 
     protected override async Task OnInitializedAsync()
     {
+        releaseHistories = new();
         try
         {
-            var data = await Http.GetFromJsonAsync<ReleaseHistoryMetadata>("jsondata/update-history.json");
-            releaseHistories = data.Histories;
+            var originData = await Http.GetFromJsonAsync<ReleaseHistoryMetadata>(MetadataJsonUri);
+            releaseHistories = originData.Histories;
             releaseHistories.Sort((obj1, obj2) => obj1.GetUpdateDateTime() < obj2.GetUpdateDateTime() ? 1 : -1);
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
-            releaseHistories = new();
         }
         catch (TaskCanceledException ex)
         {
             Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
-            releaseHistories = new();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Exception \n{ex.Message}");
-            releaseHistories = new();
         }
     }
 

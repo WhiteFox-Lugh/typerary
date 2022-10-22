@@ -63,7 +63,7 @@
 </Animate>
 
 @code {
-    private List<WorkData> works;
+    private List<WorkData>? works;
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,7 +89,7 @@
     }
 
     private string GetUrl(string bookId){
-        return $"/book/{bookId}";
+        return $"/practice/{bookId}";
     }
 
     async void OnClickResourceButton(string url){
