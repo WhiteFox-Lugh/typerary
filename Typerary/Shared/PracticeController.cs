@@ -2,38 +2,49 @@
 {
     public class PracticeController
     {
-        private static BookContent[] content;
-        public static List<string> TaskSentences { get; } = new();
-        public static List<string> JudgeSentences { get; } = new();
-        public static List<string> InputSentences { get; } = new();
+        private BookContent[] _bookContents;
+        private readonly List<string> _taskSentences = new();
+        private readonly List<string> _judgeSentences = new();
+        private readonly List<string> _inputSentences = new();
+
+        public string BookTitle { get; private set; }
+        public BookContent[] Content {
+            get {
+                var ret = new BookContent[_bookContents.Length];
+                Array.Copy(_bookContents, ret, _bookContents.Length);
+                return ret;
+            }
+        }
+
+        public List<string> TaskSentences { get => new(_taskSentences); }
+        public List<string> InputSentences { get => new(_inputSentences); }
 
         public PracticeController(Book book)
         {
-            if (book is null) throw new InvalidDataException("book is null");
-            if (book.Content is null) throw new InvalidDataException("book content is null");
-            content = book.Content;
+            BookTitle = book.Title;
+            _bookContents = book.Content;
             SetTaskSentences();
         }
 
-        private void ClearTaskSentences() => TaskSentences.Clear();
+        private void ClearTaskSentences() => _taskSentences.Clear();
 
-        private void ClearJudgeSentences() => JudgeSentences.Clear();
+        private void ClearJudgeSentences() => _judgeSentences.Clear();
 
-        private void ClearInputSentences() => InputSentences.Clear();
+        private void ClearInputSentences() => _inputSentences.Clear();
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
             ClearTaskSentences();
             ClearJudgeSentences();
-            for (var sectionIdx = sectionNumber; sectionIdx < content.Length; ++sectionIdx)
+            for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
-                var sentences = content[sectionIdx].Sentences;
+                var sentences = Content[sectionIdx].Sentences;
                 for (var sentenceIdx = (sectionIdx == sectionNumber) ? sentenceNumber : 0; sentenceIdx < sentences.Length; ++sentenceIdx)
                 {
                     var taskSentence = sentences[sentenceIdx].OriginSentence;
-                    TaskSentences.Add(taskSentence);
+                    _taskSentences.Add(taskSentence);
                     var judgeSentence = sentences[sentenceIdx].JudgeSentence;
-                    JudgeSentences.Add(judgeSentence);
+                    _judgeSentences.Add(judgeSentence);
                 }
             }
         }

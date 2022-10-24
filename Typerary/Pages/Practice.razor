@@ -42,19 +42,20 @@
     private static bool isLoadComplete = false;
     private static string bookTitle = "";
     private static int tabIndex = 0;
-    protected static PracticeController controller;
+    private string _bookId;
+    public static PracticeController controller;
 
     [Parameter]
-    public string BookId { get; set; }
+    public string BookId { get => _bookId; set => _bookId = GetSanitizedBookId(value); }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var sanitizedBookId = GetSanitizedBookId(BookId);
-            var jsonData = await Http.GetFromJsonAsync<Book>($"jsondata/works/{sanitizedBookId}.json");
-            bookTitle = jsonData.Title;
-            controller = new PracticeController(jsonData);
+            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{_bookId}.json");
+            if (book is null) throw new InvalidDataException("Exception: json data load failed! (´·ω·`)");
+            bookTitle = book.Title;
+            controller = new PracticeController(book);
             isLoadComplete = true;
         }
         catch (HttpRequestException ex)
@@ -74,7 +75,7 @@
     private string GetSanitizedBookId(string originalBookId)
     {
         var sanitizer = new HtmlSanitizer();
-        var sanitizedId = sanitizer.Sanitize(BookId);
+        var sanitizedId = sanitizer.Sanitize(originalBookId);
         return sanitizedId;
     }
 }

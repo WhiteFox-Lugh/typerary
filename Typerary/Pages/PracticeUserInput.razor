@@ -41,14 +41,16 @@
     private static int timeLimit = 60 * 60;
     private static int restTime = 300;
     private static int idx = 0;
+    private PracticeController controller;
 
     [Parameter]
     public Typerary.Shared.BookContent[] BookData { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        currentTaskSentence = PracticeController.TaskSentences[0];
-        PracticeController.InputSentences.Clear();
+        controller = Practice.controller;
+        currentTaskSentence = controller.TaskSentences[0];
+        controller.InputSentences.Clear();
     }
 
     private void OnKeyPress(KeyboardEventArgs keyEvent)
@@ -58,9 +60,9 @@
         Console.WriteLine($"Key -> {key.ToString()}, isCtrl -> {isCtrl.ToString()}");
         if (isCtrl && key.Equals("Enter"))
         {
-            idx = (idx + 1 < PracticeController.TaskSentences.Count) ? idx + 1 : idx;
-            currentTaskSentence = PracticeController.TaskSentences[idx];
-            PracticeController.InputSentences.Add(currentInputSentence);
+            idx = (idx + 1 < controller.TaskSentences.Count) ? idx + 1 : idx;
+            currentTaskSentence = controller.TaskSentences[idx];
+            controller.InputSentences.Add(currentInputSentence);
             currentInputSentence = "";
         }
     }

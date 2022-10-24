@@ -3,13 +3,13 @@
         <div class="col">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
             <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em">
-                @((MarkupString)Markdown.ToHtml(PracticeController.TaskSentences[0]))
+                @((MarkupString)Markdown.ToHtml(Practice.controller.TaskSentences[0]))
             </p>
         </div>
         <div class="col">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
             <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em">
-                @((MarkupString)Markdown.ToHtml(PracticeController.InputSentences[0]))
+                @((MarkupString)Markdown.ToHtml(Practice.controller.InputSentences[0]))
             </p>
         </div>
     </div>
