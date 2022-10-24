@@ -17,7 +17,7 @@
                 <RadzenTabs @bind-SelectedIndex=@tabIndex>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
-                            <PracticeUserInput BookData=@(Practice.bookData) />
+                            <PracticeUserInput />
                         </RadzenTabsItem>
 
                         <RadzenTabsItem Text="Config">
@@ -41,9 +41,8 @@
 @code {
     private static bool isLoadComplete = false;
     private static string bookTitle = "";
-    private static BookContent[] bookData;
-    private static List<string> taskSentences = new();
     private static int tabIndex = 0;
+    protected static PracticeController controller;
 
     [Parameter]
     public string BookId { get; set; }
@@ -54,7 +53,8 @@
         {
             var sanitizedBookId = GetSanitizedBookId(BookId);
             var jsonData = await Http.GetFromJsonAsync<Book>($"jsondata/works/{sanitizedBookId}.json");
-            SetBookInformation(jsonData);
+            bookTitle = jsonData.Title;
+            controller = new PracticeController(jsonData);
             isLoadComplete = true;
         }
         catch (HttpRequestException ex)
@@ -76,12 +76,5 @@
         var sanitizer = new HtmlSanitizer();
         var sanitizedId = sanitizer.Sanitize(BookId);
         return sanitizedId;
-    }
-
-    private void SetBookInformation(Book jsonData)
-    {
-
-        bookTitle = jsonData.Title;
-        bookData = jsonData.Content;
     }
 }
