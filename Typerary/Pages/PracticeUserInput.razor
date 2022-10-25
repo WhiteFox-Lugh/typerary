@@ -8,7 +8,7 @@
         </div>
         <div class="col">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
-            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeypress=@(args => OnKeyPress(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
+            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeypress=@(args => OnKeyPress(args)) @onkeyup=@(args => OnKeyUp(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
         </div>
     </div>
 </div>
@@ -36,35 +36,43 @@
 </div>
 
 @code {
+    private const string EnterKeyStr = "Enter";
     private static string currentTaskSentence = "";
     private static string currentInputSentence = "";
     private static int timeLimit = 60 * 60;
     private static int restTime = 300;
-    private static int idx = 0;
+    private static bool isTransitSection = false;
     private PracticeController controller;
 
     [Parameter]
-    public Typerary.Shared.BookContent[] BookData { get; set; }
+    public BookContent[] BookData { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         controller = Practice.controller;
-        currentTaskSentence = controller.TaskSentences[0];
-        controller.InputSentences.Clear();
+        currentTaskSentence = controller.GetFirstTaskSentence();
+        controller.ClearInputSentences();
     }
 
     private void OnKeyPress(KeyboardEventArgs keyEvent)
     {
+        if (isTransitSection) return;
+        var isCtrlKeyDown = keyEvent.CtrlKey;
+        var isEnterKey = keyEvent.Key.Equals(EnterKeyStr);
+        if (!(isEnterKey && isCtrlKeyDown)) { return; }
+        var nextInfo = controller.GetNextTaskSentence();
+        if (!nextInfo.hasNext) return;
+        currentTaskSentence = nextInfo.sentence;
+        controller.AddInputSentence(currentInputSentence);
+        currentInputSentence = "";
+        isTransitSection = true;
+    }
+
+    private void OnKeyUp(KeyboardEventArgs keyEvent)
+    {
         var key = keyEvent.Key;
-        var isCtrl = keyEvent.CtrlKey;
-        Console.WriteLine($"Key -> {key.ToString()}, isCtrl -> {isCtrl.ToString()}");
-        if (isCtrl && key.Equals("Enter"))
-        {
-            idx = (idx + 1 < controller.TaskSentences.Count) ? idx + 1 : idx;
-            currentTaskSentence = controller.TaskSentences[idx];
-            controller.InputSentences.Add(currentInputSentence);
-            currentInputSentence = "";
-        }
+        Console.WriteLine($"Key up -> {key.ToString()} (`･ω･´)");
+        if (keyEvent.Key.Equals(EnterKeyStr)) { isTransitSection = false; }
     }
 
     private void OnInput(string? value)

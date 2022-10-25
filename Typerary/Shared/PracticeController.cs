@@ -6,6 +6,7 @@
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
         private readonly List<string> _inputSentences = new();
+        private static int currentTaskSentenceIndex = 0;
 
         public string BookTitle { get; private set; }
         public BookContent[] Content {
@@ -16,21 +17,30 @@
             }
         }
 
-        public List<string> TaskSentences { get => new(_taskSentences); }
-        public List<string> InputSentences { get => new(_inputSentences); }
-
         public PracticeController(Book book)
         {
             BookTitle = book.Title;
             _bookContents = book.Content;
             SetTaskSentences();
+            currentTaskSentenceIndex = 0;
+        }
+
+        public string GetFirstTaskSentence() => _taskSentences[0];
+
+        public (bool hasNext, string sentence) GetNextTaskSentence()
+        {
+            if (currentTaskSentenceIndex + 1 >= _taskSentences.Count) return (false, "");
+            currentTaskSentenceIndex++;
+            return (true, _taskSentences[currentTaskSentenceIndex]);
         }
 
         private void ClearTaskSentences() => _taskSentences.Clear();
 
         private void ClearJudgeSentences() => _judgeSentences.Clear();
 
-        private void ClearInputSentences() => _inputSentences.Clear();
+        public void ClearInputSentences() => _inputSentences.Clear();
+
+        public void AddInputSentence(string sentence) => _inputSentences.Add(sentence);
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
