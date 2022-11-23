@@ -2,7 +2,7 @@
 {
     public class ReleaseHistoryMetadata
     {
-        public List<ReleaseHistory> Histories { get; set; }
+        public List<ReleaseHistory>? Histories { get; set; }
     }
 
     public class ReleaseHistory
@@ -16,8 +16,8 @@
             return res;
         }
 
-        public string UpdateDate { get; set; }
-        public string Version { get; set; }
-        public string DetailText { get; set; }
+        public string? UpdateDate { get; set; }
+        public string? Version { get; set; }
+        public string? DetailText { get; set; }
     }
 }
