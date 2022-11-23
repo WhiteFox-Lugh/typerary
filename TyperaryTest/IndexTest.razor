@@ -1,0 +1,12 @@
+﻿@code
+{
+    [Test]
+    public void IndexPageAppNameRenderCorrectly()
+    {
+        using var ctx = new Bunit.TestContext();
+        var cut = ctx.RenderComponent<Typerary.Pages.Index>();
+
+        var appName = cut.Find("h1").TextContent;
+        appName.MarkupMatches("Typerary");
+    }
+}

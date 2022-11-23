@@ -1,0 +1,81 @@
+﻿@page "/practice/{BookId}"
+@inject HttpClient Http
+@inject NavigationManager Nav;
+
+<PageTitle>Typerary - Practice</PageTitle>
+
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
+        @if (!isLoadComplete)
+        {
+            <div class="loader">Loading...</div>
+        }
+        else
+        {
+            <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+                <RadzenTabs @bind-SelectedIndex=@tabIndex>
+                    <Tabs>
+                        <RadzenTabsItem Text="Practice">
+                            <PracticeUserInput />
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Config">
+                            <PracticeConfig />
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Result(Summary)">
+                            <PracticeResultSummary />
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Result(Detail)">
+                            <PracticeResultDetail />
+                        </RadzenTabsItem>
+                    </Tabs>
+                </RadzenTabs>
+            </Animate>
+        }
+    </article>
+</Animate>
+
+@code {
+    private static bool isLoadComplete = false;
+    private static string bookTitle = "";
+    private static int tabIndex = 0;
+    private string _bookId;
+    public static PracticeController controller;
+
+    [Parameter]
+    public string BookId { get => _bookId; set => _bookId = GetSanitizedBookId(value); }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{_bookId}.json");
+            if (book is null) throw new InvalidDataException("Exception: json data load failed! (´·ω·`)");
+            bookTitle = book.Title;
+            controller = new PracticeController(book);
+            isLoadComplete = true;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception \n{ex.Message}");
+        }
+    }
+
+    private string GetSanitizedBookId(string originalBookId)
+    {
+        var sanitizer = new HtmlSanitizer();
+        var sanitizedId = sanitizer.Sanitize(originalBookId);
+        return sanitizedId;
+    }
+}
