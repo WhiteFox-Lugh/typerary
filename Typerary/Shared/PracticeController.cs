@@ -2,15 +2,17 @@
 {
     public class PracticeController
     {
-        private BookContent[] _bookContents;
+        private readonly BookContent[] _bookContents;
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
         private readonly List<string> _inputSentences = new();
         private static int currentTaskSentenceIndex = 0;
 
-        public string BookTitle { get; private set; }
-        public BookContent[] Content {
-            get {
+        public string BookTitle { init; get; }
+        public BookContent[] Content
+        {
+            get
+            {
                 var ret = new BookContent[_bookContents.Length];
                 Array.Copy(_bookContents, ret, _bookContents.Length);
                 return ret;

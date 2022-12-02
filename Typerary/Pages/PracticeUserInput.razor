@@ -39,8 +39,11 @@
     private const string EnterKeyStr = "Enter";
     private static string currentTaskSentence = "";
     private static string currentInputSentence = "";
+
+    // fixme: あとでこの定数たちは消す
     private static int timeLimit = 60 * 60;
     private static int restTime = 300;
+
     private static bool isTransitSection = false;
     private PracticeController controller;
 
@@ -56,12 +59,16 @@
 
     private void OnKeyPress(KeyboardEventArgs keyEvent)
     {
+        // Enter キー押しっぱなしで意図せず次のセクションに行ってしまうのを防止
         if (isTransitSection) return;
+
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKey = keyEvent.Key.Equals(EnterKeyStr);
         if (!(isEnterKey && isCtrlKeyDown)) { return; }
+
         var nextInfo = controller.GetNextTaskSentence();
-        if (!nextInfo.hasNext) return;
+        if (!nextInfo.hasNext) { return; }
+
         currentTaskSentence = nextInfo.sentence;
         controller.AddInputSentence(currentInputSentence);
         currentInputSentence = "";
