@@ -1,14 +1,14 @@
-﻿namespace Typerary.Shared
+﻿using Ganss.XSS;
+
+namespace Typerary.Shared
 {
     public class PracticeController
     {
         private readonly BookContent[] _bookContents;
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
-        private readonly List<string> _inputSentences = new();
-        private static int currentTaskSentenceIndex = 0;
+        private int currentTaskSentenceIndex = 0;
 
-        public string BookTitle { init; get; }
         public BookContent[] Content
         {
             get
@@ -19,35 +19,45 @@
             }
         }
 
+        public List<PracticeSectionResult> PracticeSectionResults { init; get; }
+
         public PracticeController(Book book)
         {
-            BookTitle = book.Title;
             _bookContents = book.Content;
             SetTaskSentences();
+            PracticeSectionResults = new();
             currentTaskSentenceIndex = 0;
         }
 
         public string GetFirstTaskSentence() => _taskSentences[0];
 
-        public (bool hasNext, string sentence) GetNextTaskSentence()
+        public bool HasNextTaskSentence() => currentTaskSentenceIndex + 1 < _taskSentences.Count;
+
+        public string? GetNextTaskSentence() => HasNextTaskSentence() ? _taskSentences[currentTaskSentenceIndex] : null;
+
+        public void IncrementTaskSentenceIndex() => ++currentTaskSentenceIndex;
+
+        private void ClearTaskAndJudgeSentences()
         {
-            if (currentTaskSentenceIndex + 1 >= _taskSentences.Count) return (false, "");
-            currentTaskSentenceIndex++;
-            return (true, _taskSentences[currentTaskSentenceIndex]);
+            _taskSentences.Clear();
+            _judgeSentences.Clear();
         }
 
-        private void ClearTaskSentences() => _taskSentences.Clear();
+        public void ClearPracticeSectionResults() => PracticeSectionResults.Clear();
 
-        private void ClearJudgeSentences() => _judgeSentences.Clear();
-
-        public void ClearInputSentences() => _inputSentences.Clear();
-
-        public void AddInputSentence(string sentence) => _inputSentences.Add(sentence);
+        public void SendAndScoringInputSentence(string sentence)
+        {
+            var sanitizer = new HtmlSanitizer();
+            var sanitizedInputSentence = sanitizer.Sanitize(sentence);
+            var currentJudgeSentence = _judgeSentences[currentTaskSentenceIndex];
+            var sectionResult = new PracticeSectionResult(currentJudgeSentence, sanitizedInputSentence);
+            sectionResult.SetDiffMarkUpSentence();
+            PracticeSectionResults.Add(sectionResult);
+        }
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
-            ClearTaskSentences();
-            ClearJudgeSentences();
+            ClearTaskAndJudgeSentences();
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
                 var sentences = Content[sectionIdx].Sentences;

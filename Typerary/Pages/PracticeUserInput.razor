@@ -54,7 +54,6 @@
     {
         controller = Practice.controller;
         currentTaskSentence = controller.GetFirstTaskSentence();
-        controller.ClearInputSentences();
     }
 
     private void OnKeyPress(KeyboardEventArgs keyEvent)
@@ -62,15 +61,23 @@
         // Enter キー押しっぱなしで意図せず次のセクションに行ってしまうのを防止
         if (isTransitSection) return;
 
+        // Ctrl + Enter キーの同時押しのみ
         var isCtrlKeyDown = keyEvent.CtrlKey;
-        var isEnterKey = keyEvent.Key.Equals(EnterKeyStr);
-        if (!(isEnterKey && isCtrlKeyDown)) { return; }
+        var isEnteKeyDown = keyEvent.Key.Equals(EnterKeyStr);
+        if (!(isCtrlKeyDown && isEnteKeyDown)) { return; }
 
-        var nextInfo = controller.GetNextTaskSentence();
-        if (!nextInfo.hasNext) { return; }
+        // 入力文章の送信
+        controller.SendAndScoringInputSentence(currentInputSentence);
 
-        currentTaskSentence = nextInfo.sentence;
-        controller.AddInputSentence(currentInputSentence);
+        // 次の文章があるかどうか?
+        // TODO : なければ最終セクションの処理
+        if (!controller.HasNextTaskSentence()) { return; }
+        var debugResultSentence = controller.PracticeSectionResults[0].DiffMarkUpSentence;
+        controller.IncrementTaskSentenceIndex();
+
+        var nextTaskSentence = controller.GetNextTaskSentence();
+        currentTaskSentence = nextTaskSentence + $"\n\n{debugResultSentence}";
+
         currentInputSentence = "";
         isTransitSection = true;
     }
