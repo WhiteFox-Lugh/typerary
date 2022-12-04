@@ -31,20 +31,14 @@ namespace Typerary.Shared
         // private async Task<List<Diff>> GenerateDiff()
         private List<Diff> GenerateDiff()
         {
-            //Console.WriteLine("Start GenerateDiff()");
-            //var task = Task.Run(() => dmp.diff_main(OriginalSentence, InputSentence));
-            //Console.WriteLine("Before dmp.diff_main()");
-            //task.Start();
-            //Console.WriteLine("After dmp.diff_main()");
-            //var result = await task;
-            //Console.WriteLine("End GenerateDiff()");
-            //return result;
-
-            // diff 取得に1秒かかると仮定
-            Thread.Sleep(1000);
+            // diff 取得に3秒かかると仮定
+            Console.WriteLine("Start Diff Calcurate");
+            Thread.Sleep(3000);
 
             // InputSentence -> JudgeSentence への diff
-            return dmp.diff_main(InputSentence, JudgeSentence);
+            var result = dmp.diff_main(InputSentence, JudgeSentence);
+            Console.WriteLine("End Diff Calcurate");
+            return result;
         }
 
         private string ConvertDiffsToHtmlString(List<Diff> diffs)
@@ -79,17 +73,17 @@ namespace Typerary.Shared
         // public async Task SetDiffMarkUpSentence()
         public void SetDiffMarkUpSentence()
         {
-            //Console.WriteLine("Start SetDiffMarkUpSentence()");
-            //var diffTask = Task.Run(() => GenerateDiff());
-            //Console.WriteLine("Before GenerateDiff()");
-            //var diffs = await diffTask;
-            //Console.WriteLine("After GenerateDiff()");
+            Console.WriteLine("Start SetDiffMarkUpSentence()");
+            Thread.Sleep(1000);
             var diffs = GenerateDiff();
+            Console.WriteLine("After GenerateDiff()");
+            Thread.Sleep(1000);
             DiffMarkUpSentence = ConvertDiffsToHtmlString(diffs);
 
             Console.WriteLine(JudgeSentence);
             Console.WriteLine(InputSentence);
             Console.WriteLine(DiffMarkUpSentence);
+            Console.WriteLine("End SetDiffMarkUpSentence()");
         }
     }
 }

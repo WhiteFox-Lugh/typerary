@@ -63,23 +63,24 @@
 
     private void OnKeyUp(KeyboardEventArgs keyEvent)
     {
+        Console.WriteLine("********START OnKeyUp********");
         // Ctrl + Enter キーの同時押しのみ
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
         if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
-
-        // 入力文章の送信
-        controller.SendAndScoringInputSentence(currentInputSentence);
-
+        currentInputSentence = "";
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
-        if (!controller.HasNextTaskSentence()) { return; }
-        controller.IncrementTaskSentenceIndex();
-
-        var nextTaskSentence = controller.GetNextTaskSentence();
-        currentTaskSentence = nextTaskSentence;
-
-        currentInputSentence = "";
+        if (controller.HasNextTaskSentence())
+        {
+            var nextTaskSentence = controller.GetNextTaskSentence();
+            currentTaskSentence = nextTaskSentence;
+            controller.IncrementTaskSentenceIndex();
+        }
+        // 入力文章の送信
+        controller.SendAndScoringInputSentence(currentInputSentence);
+        
+        Console.WriteLine("********END OnKeyUp********");
     }
 
     private void OnInput(string? value)

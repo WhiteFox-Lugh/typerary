@@ -17,7 +17,7 @@
             }
         }
 
-        public List<PracticeSectionResult> PracticeSectionResults { init; get; }
+        public SortedDictionary<int, PracticeSectionResult> PracticeSectionResults { init; get; }
 
         public PracticeController(Book book)
         {
@@ -33,9 +33,13 @@
 
         public bool HasNextTaskSentence() => currentTaskSentenceIndex + 1 < _taskSentences.Count;
 
-        public string? GetNextTaskSentence() => HasNextTaskSentence() ? _taskSentences[currentTaskSentenceIndex] : null;
+        public string? GetNextTaskSentence() => HasNextTaskSentence() ? _taskSentences[currentTaskSentenceIndex + 1] : null;
 
-        public void IncrementTaskSentenceIndex() => ++currentTaskSentenceIndex;
+        public void IncrementTaskSentenceIndex()
+        {
+            ++currentTaskSentenceIndex;
+            Console.WriteLine("Index Incremented");
+        }
 
         private void ClearTaskAndJudgeSentences()
         {
@@ -47,10 +51,11 @@
 
         public void SendAndScoringInputSentence(string sentence)
         {
-            var currentJudgeSentence = _judgeSentences[currentTaskSentenceIndex];
+            var currentIndex = currentTaskSentenceIndex;
+            var currentJudgeSentence = _judgeSentences[currentIndex];
             var sectionResult = new PracticeSectionResult(currentJudgeSentence, sentence);
             sectionResult.SetDiffMarkUpSentence();
-            PracticeSectionResults.Add(sectionResult);
+            PracticeSectionResults.Add(currentIndex, sectionResult);
         }
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
