@@ -1,6 +1,4 @@
-﻿using Ganss.XSS;
-
-namespace Typerary.Shared
+﻿namespace Typerary.Shared
 {
     public class PracticeController
     {
@@ -26,8 +24,10 @@ namespace Typerary.Shared
             _bookContents = book.Content;
             SetTaskSentences();
             PracticeSectionResults = new();
-            currentTaskSentenceIndex = 0;
+            ResetTaskIndex();
         }
+
+        public void ResetTaskIndex() => currentTaskSentenceIndex = 0;
 
         public string GetFirstTaskSentence() => _taskSentences[0];
 
@@ -47,10 +47,8 @@ namespace Typerary.Shared
 
         public void SendAndScoringInputSentence(string sentence)
         {
-            var sanitizer = new HtmlSanitizer();
-            var sanitizedInputSentence = sanitizer.Sanitize(sentence);
             var currentJudgeSentence = _judgeSentences[currentTaskSentenceIndex];
-            var sectionResult = new PracticeSectionResult(currentJudgeSentence, sanitizedInputSentence);
+            var sectionResult = new PracticeSectionResult(currentJudgeSentence, sentence);
             sectionResult.SetDiffMarkUpSentence();
             PracticeSectionResults.Add(sectionResult);
         }

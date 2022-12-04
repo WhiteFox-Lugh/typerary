@@ -44,7 +44,6 @@
     private static int timeLimit = 60 * 60;
     private static int restTime = 300;
 
-    private static bool isTransitSection = false;
     private PracticeController controller;
 
     [Parameter]
@@ -53,18 +52,21 @@
     protected override async Task OnInitializedAsync()
     {
         controller = Practice.controller;
+        controller.ResetTaskIndex();
         currentTaskSentence = controller.GetFirstTaskSentence();
     }
 
     private void OnKeyPress(KeyboardEventArgs keyEvent)
     {
-        // Enter キー押しっぱなしで意図せず次のセクションに行ってしまうのを防止
-        if (isTransitSection) return;
 
+    }
+
+    private void OnKeyUp(KeyboardEventArgs keyEvent)
+    {
         // Ctrl + Enter キーの同時押しのみ
         var isCtrlKeyDown = keyEvent.CtrlKey;
-        var isEnteKeyDown = keyEvent.Key.Equals(EnterKeyStr);
-        if (!(isCtrlKeyDown && isEnteKeyDown)) { return; }
+        var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
+        if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
 
         // 入力文章の送信
         controller.SendAndScoringInputSentence(currentInputSentence);
@@ -72,21 +74,12 @@
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
         if (!controller.HasNextTaskSentence()) { return; }
-        var debugResultSentence = controller.PracticeSectionResults[0].DiffMarkUpSentence;
         controller.IncrementTaskSentenceIndex();
 
         var nextTaskSentence = controller.GetNextTaskSentence();
-        currentTaskSentence = nextTaskSentence + $"\n\n{debugResultSentence}";
+        currentTaskSentence = nextTaskSentence;
 
         currentInputSentence = "";
-        isTransitSection = true;
-    }
-
-    private void OnKeyUp(KeyboardEventArgs keyEvent)
-    {
-        var key = keyEvent.Key;
-        Console.WriteLine($"Key up -> {key.ToString()} (`･ω･´)");
-        if (keyEvent.Key.Equals(EnterKeyStr)) { isTransitSection = false; }
     }
 
     private void OnInput(string? value)
