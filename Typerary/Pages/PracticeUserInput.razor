@@ -68,7 +68,7 @@
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
         if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
-        currentInputSentence = "";
+
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
         if (controller.HasNextTaskSentence())
@@ -76,10 +76,17 @@
             var nextTaskSentence = controller.GetNextTaskSentence();
             currentTaskSentence = nextTaskSentence;
             controller.IncrementTaskSentenceIndex();
+            // 入力文章の送信
+            controller.SendAndScoringInputSentence(currentInputSentence);
         }
-        // 入力文章の送信
-        controller.SendAndScoringInputSentence(currentInputSentence);
-        
+        // 最終セクション
+        else
+        {
+            currentTaskSentence = "";
+            controller.IncrementTaskSentenceIndex();
+            // 入力文章の送信
+            controller.SendAndScoringInputSentence(currentInputSentence);
+        }
         Console.WriteLine("********END OnKeyUp********");
     }
 

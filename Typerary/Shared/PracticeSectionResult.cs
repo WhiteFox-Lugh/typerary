@@ -28,18 +28,7 @@ namespace Typerary.Shared
             InputSentence = inputSentence;
         }
 
-        // private async Task<List<Diff>> GenerateDiff()
-        private List<Diff> GenerateDiff()
-        {
-            // diff 取得に3秒かかると仮定
-            Console.WriteLine("Start Diff Calcurate");
-            Thread.Sleep(3000);
-
-            // InputSentence -> JudgeSentence への diff
-            var result = dmp.diff_main(InputSentence, JudgeSentence);
-            Console.WriteLine("End Diff Calcurate");
-            return result;
-        }
+        private List<Diff> GenerateDiff() => dmp.diff_main(InputSentence, JudgeSentence);
 
         private string ConvertDiffsToHtmlString(List<Diff> diffs)
         {
@@ -70,20 +59,10 @@ namespace Typerary.Shared
             return ret;
         }
 
-        // public async Task SetDiffMarkUpSentence()
         public void SetDiffMarkUpSentence()
         {
-            Console.WriteLine("Start SetDiffMarkUpSentence()");
-            Thread.Sleep(1000);
             var diffs = GenerateDiff();
-            Console.WriteLine("After GenerateDiff()");
-            Thread.Sleep(1000);
             DiffMarkUpSentence = ConvertDiffsToHtmlString(diffs);
-
-            Console.WriteLine(JudgeSentence);
-            Console.WriteLine(InputSentence);
-            Console.WriteLine(DiffMarkUpSentence);
-            Console.WriteLine("End SetDiffMarkUpSentence()");
         }
     }
 }

@@ -5,6 +5,7 @@
         private readonly BookContent[] _bookContents;
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
+        private readonly Queue<int> _judgeQueue = new();
         private int currentTaskSentenceIndex = 0;
 
         public BookContent[] Content
@@ -35,17 +36,15 @@
 
         public string? GetNextTaskSentence() => HasNextTaskSentence() ? _taskSentences[currentTaskSentenceIndex + 1] : null;
 
-        public void IncrementTaskSentenceIndex()
-        {
-            ++currentTaskSentenceIndex;
-            Console.WriteLine("Index Incremented");
-        }
+        public void IncrementTaskSentenceIndex() => ++currentTaskSentenceIndex;
 
         private void ClearTaskAndJudgeSentences()
         {
             _taskSentences.Clear();
             _judgeSentences.Clear();
         }
+
+        private void ClearJudgeQueue() => _judgeQueue.Clear();
 
         public void ClearPracticeSectionResults() => PracticeSectionResults.Clear();
 
@@ -61,6 +60,7 @@
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
             ClearTaskAndJudgeSentences();
+            ClearJudgeQueue();
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
                 var sentences = Content[sectionIdx].Sentences;
