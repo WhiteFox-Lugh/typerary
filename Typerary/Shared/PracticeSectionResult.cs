@@ -1,10 +1,6 @@
 ﻿using DiffMatchPatch;
 using Ganss.XSS;
 using Shaman.Runtime;
-using System.Web;
-using System.Text;
-// Todo: デバッグ用なので後で消す
-using System.Threading;
 
 namespace Typerary.Shared
 {

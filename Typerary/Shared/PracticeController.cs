@@ -5,7 +5,7 @@
         private readonly BookContent[] _bookContents;
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
-        private readonly Queue<int> _judgeQueue = new();
+        private PracticeResult _practiceResult;
         private int currentTaskSentenceIndex = 0;
 
         public BookContent[] Content
@@ -18,14 +18,15 @@
             }
         }
 
-        public SortedDictionary<int, PracticeSectionResult> PracticeSectionResults { init; get; }
+        public bool IsFinished { get; private set; }
 
         public PracticeController(Book book)
         {
             _bookContents = book.Content;
             SetTaskSentences();
-            PracticeSectionResults = new();
             ResetTaskIndex();
+            ResetPracticeResult();
+            IsFinished = false;
         }
 
         public void ResetTaskIndex() => currentTaskSentenceIndex = 0;
@@ -38,29 +39,31 @@
 
         public void IncrementTaskSentenceIndex() => ++currentTaskSentenceIndex;
 
+        private void ResetPracticeResult() => _practiceResult = new();
+
         private void ClearTaskAndJudgeSentences()
         {
             _taskSentences.Clear();
             _judgeSentences.Clear();
         }
 
-        private void ClearJudgeQueue() => _judgeQueue.Clear();
-
-        public void ClearPracticeSectionResults() => PracticeSectionResults.Clear();
 
         public void SendAndScoringInputSentence(string sentence)
         {
             var currentIndex = currentTaskSentenceIndex;
+            if (currentIndex >= _taskSentences.Count) { return; }
+
             var currentJudgeSentence = _judgeSentences[currentIndex];
             var sectionResult = new PracticeSectionResult(currentJudgeSentence, sentence);
             sectionResult.SetDiffMarkUpSentence();
-            PracticeSectionResults.Add(currentIndex, sectionResult);
+            _practiceResult.AddSectionResult(currentIndex, sectionResult);
         }
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
+            IsFinished = false;
             ClearTaskAndJudgeSentences();
-            ClearJudgeQueue();
+            ResetPracticeResult();
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
                 var sentences = Content[sectionIdx].Sentences;
@@ -72,6 +75,12 @@
                     _judgeSentences.Add(judgeSentence);
                 }
             }
+        }
+
+        public void DoFinishProcess()
+        {
+            if (IsFinished) { return; }
+            IsFinished = true;
         }
     }
 }

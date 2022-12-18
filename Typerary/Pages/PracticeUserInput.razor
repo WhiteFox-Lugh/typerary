@@ -75,7 +75,6 @@
         {
             var nextTaskSentence = controller.GetNextTaskSentence();
             currentTaskSentence = nextTaskSentence;
-            controller.IncrementTaskSentenceIndex();
             // 入力文章の送信
             controller.SendAndScoringInputSentence(currentInputSentence);
         }
@@ -83,10 +82,11 @@
         else
         {
             currentTaskSentence = "";
-            controller.IncrementTaskSentenceIndex();
             // 入力文章の送信
             controller.SendAndScoringInputSentence(currentInputSentence);
         }
+        currentInputSentence = "";
+        controller.IncrementTaskSentenceIndex();
         Console.WriteLine("********END OnKeyUp********");
     }
 
