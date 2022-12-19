@@ -10,7 +10,7 @@ namespace Typerary.Shared
         private static diff_match_patch dmp;
         private readonly Func<ValueString, string> insertHtmlStyle = (ValueString text) => $"<ins style=\"background:#e6ffe6; font-weight:bold\">{text}</ins>";
         private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6; font-weight:bold\">{text}</del>";
-        private readonly Func<ValueString, string> replaceHtmlStyle = (ValueString text) => $"<span style=\"background:#e6e6ff; font-weight:bold\">{text}</span>";
+        private readonly Func<ValueString, ValueString, string> replaceHtmlStyle = (ValueString wrongText, ValueString collectText) => $"<span style=\"background:#e6e6ff; font-weight:bold\"><del>{wrongText}</del> &rarr; {collectText}</span>";
         private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span style=\"color:#666666\">{text}</span>";
         public int CollectCount { get; private set; } = 10;
         public int WrongCount { get; private set; } = 1;
@@ -41,7 +41,7 @@ namespace Typerary.Shared
                     {
                         Operation.EQUAL => equalHtmlStyle.Invoke(ithText),
                         Operation.INSERT => insertHtmlStyle.Invoke(ithText),
-                        Operation.DELETE when isReplace => replaceHtmlStyle.Invoke(ithText),
+                        Operation.DELETE when isReplace => replaceHtmlStyle.Invoke(ithText, diffs[i + 1].text),
                         Operation.DELETE => deleteHtmlStyle.Invoke(ithText),
                         _ => ""
                     });
@@ -61,6 +61,10 @@ namespace Typerary.Shared
         public void SetDiffMarkUpSentence()
         {
             var diffs = GenerateDiff();
+            foreach (var diff in diffs)
+            {
+                Console.WriteLine($"({diff.operation}, {diff.text}");
+            }
             DiffMarkUpSentence = ConvertDiffsToHtmlString(diffs);
         }
     }
