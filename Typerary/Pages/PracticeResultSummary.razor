@@ -1,22 +1,65 @@
-﻿<RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-3 cormonant">Result</RadzenText>
-<RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">Collect @(collectCount)</RadzenText>
-<RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">Wrong @(wrongCount)</RadzenText>
-    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">Accuracy @(accuracy.ToString("0.00")) %</RadzenText>
+﻿<RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3" class="mb-3 cormonant">
+    Result
+</RadzenText>
+
+<div class="d-flex flex-row mt-5 mx-2 px-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="text-left mx-4 px-2">
+                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant">
+                        Summary
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
+                        Collect @(collectCount)
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
+                        Wrong @(wrongCount)
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
+                        Accuracy @(accuracy.ToString("0.00")) %
+                    </RadzenText>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant pb-2">
+                    Input
+                </RadzenText>
+                <RadzenCard class="text-left py-3">
+                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@sectionResults" TItem="Typerary.Shared.PracticeSectionResult" PageSize="1" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                        <Template Context="section">
+                            <div class="container">
+                                <div class="col">
+                                    <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
+                                        @((MarkupString)Markdown.ToHtml(section.DiffMarkUpSentence))
+                                    </p>
+                                </div>
+                            </div>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenCard>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @code {
     private bool showValue = true;
     private int collectCount;
     private int wrongCount;
     private double accuracy;
-    GaugeTickPosition tickPosition = GaugeTickPosition.Outside;
+    private IEnumerable<PracticeSectionResult> sectionResults;
 
     [Parameter]
     public PracticeResult CurrentResult { get; set; }
 
-    protected override async Task OnInitializedAsync(){
+    protected override async Task OnInitializedAsync()
+    {
         collectCount = CurrentResult.GetCollectCount();
         wrongCount = CurrentResult.GetWrongCount();
         accuracy = CurrentResult.GetAccuracy();
-
+        sectionResults = CurrentResult.GetSectionResults().Values;
     }
 }

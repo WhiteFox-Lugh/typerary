@@ -8,10 +8,10 @@ namespace Typerary.Shared
     public class PracticeSectionResult
     {
         private static diff_match_patch dmp;
-        private readonly Func<ValueString, string> insertHtmlStyle = (ValueString text) => $"<ins style=\"background:#e6ffe6;\">{text}</ins>";
-        private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6;\">{text}</del>";
-        private readonly Func<ValueString, string> replaceHtmlStyle = (ValueString text) => $"<span style=\"background:#e6e6ff\">{text}</span>";
-        private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span>{text}</span>";
+        private readonly Func<ValueString, string> insertHtmlStyle = (ValueString text) => $"<ins style=\"background:#e6ffe6; font-weight:bold\">{text}</ins>";
+        private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6; font-weight:bold\">{text}</del>";
+        private readonly Func<ValueString, string> replaceHtmlStyle = (ValueString text) => $"<span style=\"background:#e6e6ff; font-weight:bold\">{text}</span>";
+        private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span style=\"color:#666666\">{text}</span>";
         public int CollectCount { get; private set; } = 10;
         public int WrongCount { get; private set; } = 1;
 
@@ -35,16 +35,17 @@ namespace Typerary.Shared
             {
                 var ithOperation = diffs[i].operation;
                 var ithText = diffs[i].text;
+                var isReplace = (i + 1 < diffs.Count) && (diffs[i + 1].operation is Operation.INSERT);
                 stringBuilder.Append(
                     ithOperation switch
                     {
                         Operation.EQUAL => equalHtmlStyle.Invoke(ithText),
                         Operation.INSERT => insertHtmlStyle.Invoke(ithText),
-                        Operation.DELETE when (i + 1 < diffs.Count) && (diffs[i + 1].operation is Operation.INSERT) => replaceHtmlStyle.Invoke(ithText),
+                        Operation.DELETE when isReplace => replaceHtmlStyle.Invoke(ithText),
                         Operation.DELETE => deleteHtmlStyle.Invoke(ithText),
                         _ => ""
                     });
-                if (ithOperation is Operation.DELETE && i + 1 < diffs.Count && diffs[i + 1].operation is Operation.INSERT)
+                if (isReplace)
                 {
                     i++;
                 }

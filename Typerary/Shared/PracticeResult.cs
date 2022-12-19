@@ -36,5 +36,7 @@
         public int GetWrongCount() => wrongCount;
 
         public double GetAccuracy() => accuracy;
+
+        public SortedDictionary<int, PracticeSectionResult> GetSectionResults() => new(practiceSectionResults);
     }
 }
