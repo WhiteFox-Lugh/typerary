@@ -14,7 +14,7 @@
         {
             <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenTabs @bind-SelectedIndex=@tabIndex>
+                <RadzenTabs @bind-SelectedIndex=@tabIndex Change=@OnChange>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
                             <PracticeUserInput />
@@ -25,7 +25,7 @@
                         </RadzenTabsItem>
 
                         <RadzenTabsItem Text="Result(Summary)">
-                            <PracticeResultSummary />
+                            <PracticeResultSummary CurrentResult=@controller.CurrentPracticeResult/>
                         </RadzenTabsItem>
 
                         <RadzenTabsItem Text="Result(Detail)">
@@ -39,6 +39,13 @@
 </Animate>
 
 @code {
+    private enum TabIndex {
+        Practice = 0,
+        Config = 1,
+        ResultSummary = 2,
+        ResultDetail = 3
+    };
+
     private static bool isLoadComplete = false;
     private static string bookTitle = "";
     private static int tabIndex = 0;
@@ -47,7 +54,7 @@
 
     [Parameter]
     public string BookId { get => bookId; set => bookId = GetSanitizedBookId(value); }
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -58,6 +65,8 @@
 
             // set data
             bookTitle = book.Title;
+            if (controller != null){ return; }
+
             controller = new PracticeController(book);
             isLoadComplete = true;
         }
@@ -80,5 +89,21 @@
         var sanitizer = new HtmlSanitizer();
         var sanitizedId = sanitizer.Sanitize(originalBookId);
         return sanitizedId;
+    }
+
+    private void OnChange(int index){
+        switch ((TabIndex)index){
+            case TabIndex.Practice:
+                break;
+            case TabIndex.Config:
+                break;
+            case TabIndex.ResultSummary:
+                break;
+            case TabIndex.ResultDetail:
+                break;
+            default:
+                throw new InvalidOperationException("タブのインデックスの値が不正です");
+                break;
+        }
     }
 }

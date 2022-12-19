@@ -84,6 +84,7 @@
             currentTaskSentence = "";
             // 入力文章の送信
             controller.SendAndScoringInputSentence(currentInputSentence);
+            controller.DoFinishProcess();
         }
         currentInputSentence = "";
         controller.IncrementTaskSentenceIndex();

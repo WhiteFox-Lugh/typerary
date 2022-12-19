@@ -5,8 +5,9 @@
         private readonly BookContent[] _bookContents;
         private readonly List<string> _taskSentences = new();
         private readonly List<string> _judgeSentences = new();
-        private PracticeResult _practiceResult;
         private int currentTaskSentenceIndex = 0;
+
+        public PracticeResult CurrentPracticeResult { get; private set; }
 
         public BookContent[] Content
         {
@@ -39,7 +40,7 @@
 
         public void IncrementTaskSentenceIndex() => ++currentTaskSentenceIndex;
 
-        private void ResetPracticeResult() => _practiceResult = new();
+        private void ResetPracticeResult() => CurrentPracticeResult = new();
 
         private void ClearTaskAndJudgeSentences()
         {
@@ -56,7 +57,7 @@
             var currentJudgeSentence = _judgeSentences[currentIndex];
             var sectionResult = new PracticeSectionResult(currentJudgeSentence, sentence);
             sectionResult.SetDiffMarkUpSentence();
-            _practiceResult.AddSectionResult(currentIndex, sectionResult);
+            CurrentPracticeResult.AddSectionResult(currentIndex, sectionResult);
         }
 
         public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
@@ -81,6 +82,8 @@
         {
             if (IsFinished) { return; }
             IsFinished = true;
+
+            CurrentPracticeResult.SetResultValues();
         }
     }
 }

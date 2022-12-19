@@ -12,6 +12,8 @@ namespace Typerary.Shared
         private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6;\">{text}</del>";
         private readonly Func<ValueString, string> replaceHtmlStyle = (ValueString text) => $"<span style=\"background:#e6e6ff\">{text}</span>";
         private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span>{text}</span>";
+        public int CollectCount { get; private set; } = 10;
+        public int WrongCount { get; private set; } = 1;
 
         public string JudgeSentence { init; get; }
         public string InputSentence { init; get; }
