@@ -22,22 +22,63 @@
                 </div>
             </div>
             <div class="col-lg-9">
-                <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant pb-2">
-                    Input
-                </RadzenText>
-                <RadzenCard class="text-left py-3">
-                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@sectionResults" TItem="Typerary.Shared.PracticeSectionResult" PageSize="1" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
-                        <Template Context="section">
-                            <div class="container">
-                                <div class="col">
-                                    <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
-                                        @((MarkupString)Markdown.ToHtml(section.DiffMarkUpSentence))
-                                    </p>
+                <div>
+                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant p-3">
+                        Section Result
+                    </RadzenText>
+                </div>
+                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@sectionResults" TItem="Typerary.Shared.PracticeSectionResult" PageSize="1" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                    <Template Context="section">
+                        <div class="w-100">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
+                                課題文
+                            </RadzenText>
+                            <RadzenCard class="text-left py-3">
+                                <div class="container">
+                                    <div class="col">
+                                        <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
+                                            @((MarkupString)Markdown.ToHtml(section.JudgeSentence))
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </Template>
-                    </RadzenDataList>
-                </RadzenCard>
+                            </RadzenCard>
+                        </div>
+                        <div class="w-100">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
+                                入力
+                            </RadzenText>
+                            <RadzenCard class="text-left py-3">
+                                <div class="container">
+                                    <div class="col">
+                                        <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
+                                            @((MarkupString)Markdown.ToHtml(section.InputSentence))
+                                        </p>
+                                    </div>
+                                </div>
+                            </RadzenCard>
+                        </div>
+                        <div class="w-100">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
+                                差分
+                            </RadzenText>
+                            <RadzenCard class="text-left py-3">
+                                <div class="container">
+                                    <div class="col">
+                                        <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
+                                            @((MarkupString)Markdown.ToHtml(section.DiffMarkUpSentence))
+                                        </p>
+                                    </div>
+                                </div>
+                            </RadzenCard>
+                        </div>
+                        <div class="w-100">
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
+                                正解： @(section.CollectCount) 　/　
+                                不正解：　@(section.WrongCount)　（<span style="background:#e6e6ff; font-weight:bold">置換</span>：　@(section.WrongReplaceCount)　/ <del style="background:#ffe6e6; font-weight:bold">余分</del>：　@(section.WrongDeleteCount)　/ <ins style="background:#e6ffe6; font-weight:bold">不足</ins>：　@(section.WrongInsertCount)）
+                            </RadzenText>
+                        </div>
+                    </Template>
+                </RadzenDataList>
             </div>
         </div>
     </div>

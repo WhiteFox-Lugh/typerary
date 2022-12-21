@@ -48,8 +48,8 @@ namespace Typerary.Shared
         private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6; font-weight:bold\">{text}</del>";
         private readonly Func<ValueString, ValueString?, string> replaceHtmlStyle = (ValueString wrongText, ValueString? collectText) => $"<span style=\"background:#e6e6ff; font-weight:bold\"><del>{wrongText}</del> &rarr; {collectText}</span>";
         private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span style=\"color:#666666\">{text}</span>";
-        public int CollectCount { get; private set; } = 10;
-        public int WrongCount { get; private set; } = 1;
+        public int CollectCount { get; private set; } = 0;
+        public int WrongCount { get; private set; } = 0;
         public int WrongDeleteCount { get; private set; } = 0;
         public int WrongInsertCount { get; private set; } = 0;
         public int WrongReplaceCount { get; private set; } = 0;
@@ -63,6 +63,11 @@ namespace Typerary.Shared
             dmp ??= new();
             JudgeSentence = judgeSentence;
             InputSentence = inputSentence;
+            CollectCount = 0;
+            WrongCount = 0;
+            WrongDeleteCount = 0;
+            WrongInsertCount = 0;
+            WrongReplaceCount = 0;
         }
 
         private List<Diff> GenerateDiff() => dmp.diff_main(InputSentence, JudgeSentence);
@@ -84,6 +89,10 @@ namespace Typerary.Shared
                     Operation.DELETE => new TyperaryDiff(DiffOperation.Delete, ithText),
                     _ => throw new NotImplementedException("Fatal Error: Diff -> TyperaryDiff のパターン網羅漏れがあります"),
                 });
+                if (ithOperation is Operation.DELETE && isReplace)
+                {
+                    i++;
+                }
             }
             return ret;
         }
