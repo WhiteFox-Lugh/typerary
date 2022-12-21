@@ -14,17 +14,32 @@ namespace Typerary.Shared
             Delete,
             Replace
         }
+
         public class TyperaryDiff
         {
-            public readonly DiffOperation operation;
-            public readonly ValueString input;
-            public readonly ValueString? correctString;
+            public readonly DiffOperation Operation;
+            public readonly ValueString Input;
+            public readonly ValueString? CorrectString;
+            public readonly int CorrectCount;
+            public readonly int WrongCount;
 
             public TyperaryDiff(DiffOperation op, ValueString inputText, ValueString? correct = null)
             {
-                operation = op;
-                input = inputText;
-                correctString = correct;
+                Operation = op;
+                Input = inputText;
+                CorrectString = correct;
+                CorrectCount = op switch
+                {
+                    DiffOperation.Equal => Input.Length,
+                    _ => 0
+                };
+
+                WrongCount = op switch
+                {
+                    DiffOperation.Delete or DiffOperation.Insert => Input.Length,
+                    DiffOperation.Replace => Math.Max(Input.Length, CorrectString.Value.Length),
+                    _ => 0
+                };
             }
         }
 
@@ -35,6 +50,9 @@ namespace Typerary.Shared
         private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span style=\"color:#666666\">{text}</span>";
         public int CollectCount { get; private set; } = 10;
         public int WrongCount { get; private set; } = 1;
+        public int WrongDeleteCount { get; private set; } = 0;
+        public int WrongInsertCount { get; private set; } = 0;
+        public int WrongReplaceCount { get; private set; } = 0;
 
         public string JudgeSentence { init; get; }
         public string InputSentence { init; get; }
@@ -70,17 +88,42 @@ namespace Typerary.Shared
             return ret;
         }
 
+        private void SetCorrectAndWrongCounts(List<TyperaryDiff> diffs)
+        {
+            foreach (var diff in diffs)
+            {
+                switch (diff.Operation)
+                {
+                    case DiffOperation.Equal:
+                        CollectCount += diff.CorrectCount;
+                        break;
+                    case DiffOperation.Insert:
+                        WrongCount += diff.WrongCount;
+                        WrongInsertCount += diff.WrongCount;
+                        break;
+                    case DiffOperation.Delete:
+                        WrongCount += diff.WrongCount;
+                        WrongDeleteCount += diff.WrongCount;
+                        break;
+                    case DiffOperation.Replace:
+                        WrongCount += diff.WrongCount;
+                        WrongReplaceCount += diff.WrongCount;
+                        break;
+                }
+            }
+        }
+
         private string ConvertDiffsToHtmlString(List<TyperaryDiff> diffs)
         {
             var stringBuilder = ReseekableStringBuilder.AcquirePooledStringBuilder();
             foreach (var diff in diffs)
             {
-                var htmlText = diff.operation switch
+                var htmlText = diff.Operation switch
                 {
-                    DiffOperation.Equal => equalHtmlStyle.Invoke(diff.input),
-                    DiffOperation.Insert => insertHtmlStyle.Invoke(diff.input),
-                    DiffOperation.Delete => deleteHtmlStyle.Invoke(diff.input),
-                    DiffOperation.Replace => replaceHtmlStyle.Invoke(diff.input, diff.correctString),
+                    DiffOperation.Equal => equalHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Insert => insertHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Delete => deleteHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Replace => replaceHtmlStyle.Invoke(diff.Input, diff.CorrectString),
                     _ => ""
                 };
                 stringBuilder.Append(htmlText);
@@ -97,6 +140,7 @@ namespace Typerary.Shared
         {
             var diffs = GenerateDiff();
             var convertedDiff = ConvertDiffToTyperaryDiff(diffs);
+            SetCorrectAndWrongCounts(convertedDiff);
             DiffMarkUpSentence = ConvertDiffsToHtmlString(convertedDiff);
         }
     }
