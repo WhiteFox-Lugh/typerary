@@ -8,7 +8,7 @@
         </div>
         <div class="col">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
-            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeypress=@(args => OnKeyPress(args)) @onkeyup=@(args => OnKeyUp(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
+            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeyup=@(args => OnKeyUp(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
         </div>
     </div>
 </div>
@@ -16,19 +16,17 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col">
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
-                Remaining time: @restTime sec.
-            </RadzenText>
+            <!-- TODO: タイマーをここに用意したい -->
         </div>
         <div class="col">
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
-                Commands:
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">
+                操作:
             </RadzenText>
-            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P">
-                ・Ctrl + Enter : Next Line
+            <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
+                ・Ctrl 押しながら Enter : 次のセクション
             </RadzenText>
-            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P">
-                ・F2 → F2 : Quit
+            <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
+                ・F2 を3回 : 終了
             </RadzenText>
 
         </div>
@@ -39,10 +37,6 @@
     private const string EnterKeyStr = "Enter";
     private static string currentTaskSentence = "";
     private static string currentInputSentence = "";
-
-    // fixme: あとでこの定数たちは消す
-    private static int timeLimit = 60 * 60;
-    private static int restTime = 300;
 
     private PracticeController controller;
 
@@ -56,19 +50,8 @@
         currentTaskSentence = controller.GetFirstTaskSentence();
     }
 
-    private void OnKeyPress(KeyboardEventArgs keyEvent)
+    private void GoNextSection()
     {
-
-    }
-
-    private void OnKeyUp(KeyboardEventArgs keyEvent)
-    {
-        Console.WriteLine("********START OnKeyUp********");
-        // Ctrl + Enter キーの同時押しのみ
-        var isCtrlKeyDown = keyEvent.CtrlKey;
-        var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
-        if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
-
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
         if (controller.HasNextTaskSentence())
@@ -88,6 +71,16 @@
         }
         currentInputSentence = "";
         controller.IncrementTaskSentenceIndex();
+    }
+
+    private void OnKeyUp(KeyboardEventArgs keyEvent)
+    {
+        Console.WriteLine("********START OnKeyUp********");
+        // Ctrl + Enter キーの同時押しのみ
+        var isCtrlKeyDown = keyEvent.CtrlKey;
+        var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
+        if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
+        GoNextSection();
         Console.WriteLine("********END OnKeyUp********");
     }
 

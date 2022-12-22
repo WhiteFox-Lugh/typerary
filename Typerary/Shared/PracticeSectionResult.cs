@@ -140,7 +140,8 @@ namespace Typerary.Shared
 
             var text = stringBuilder.ToString();
             var sanitizer = new HtmlSanitizer();
-            var ret = sanitizer.Sanitize(text);
+            var sanitizedText = sanitizer.Sanitize(text);
+            var ret = sanitizedText.Replace("\n", "&#x23CE;");
             ReseekableStringBuilder.Release(stringBuilder);
             return ret;
         }

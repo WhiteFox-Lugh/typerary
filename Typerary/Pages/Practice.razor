@@ -14,23 +14,29 @@
         {
             <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenTabs @bind-SelectedIndex=@tabIndex Change=@OnChange>
+                <RadzenTabs @bind-SelectedIndex=@tabIndex>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
                             <PracticeUserInput />
                         </RadzenTabsItem>
 
+                        <!--
+                            TODO: 設定画面を作る
                         <RadzenTabsItem Text="Config">
                             <PracticeConfig />
                         </RadzenTabsItem>
+                        -->
 
                         <RadzenTabsItem Text="Result(Summary)">
-                            <PracticeResultSummary CurrentResult=@controller.CurrentPracticeResult/>
+                            <PracticeResultSummary CurrentResult=@controller.CurrentPracticeResult />
                         </RadzenTabsItem>
 
+                        <!---
+                            TODO; リザルト詳細を作る
                         <RadzenTabsItem Text="Result(Detail)">
                             <PracticeResultDetail />
                         </RadzenTabsItem>
+                        -->
                     </Tabs>
                 </RadzenTabs>
             </Animate>
@@ -39,7 +45,8 @@
 </Animate>
 
 @code {
-    private enum TabIndex {
+    private enum TabIndex
+    {
         Practice = 0,
         Config = 1,
         ResultSummary = 2,
@@ -65,7 +72,7 @@
 
             // set data
             bookTitle = book.Title;
-            if (controller != null){ return; }
+            if (controller != null) { return; }
 
             controller = new PracticeController(book);
             isLoadComplete = true;
@@ -89,21 +96,5 @@
         var sanitizer = new HtmlSanitizer();
         var sanitizedId = sanitizer.Sanitize(originalBookId);
         return sanitizedId;
-    }
-
-    private void OnChange(int index){
-        switch ((TabIndex)index){
-            case TabIndex.Practice:
-                break;
-            case TabIndex.Config:
-                break;
-            case TabIndex.ResultSummary:
-                break;
-            case TabIndex.ResultDetail:
-                break;
-            default:
-                throw new InvalidOperationException("タブのインデックスの値が不正です");
-                break;
-        }
     }
 }
