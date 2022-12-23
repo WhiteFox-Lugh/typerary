@@ -30,13 +30,9 @@
         public void Init()
         {
             SetTaskSentences();
-            ResetTaskIndex();
-            ResetPracticeResult();
-            CurrentPracticeResult = new();
+            currentTaskSentenceIndex = 0;
             IsFinished = false;
         }
-
-        private void ResetTaskIndex() => currentTaskSentenceIndex = 0;
 
         public string GetFirstTaskSentence() => _taskSentences[0];
 
@@ -48,17 +44,13 @@
 
         private void ResetPracticeResult() => CurrentPracticeResult = new();
 
-        private void ClearTaskAndJudgeSentences()
-        {
-            _taskSentences.Clear();
-            _judgeSentences.Clear();
-        }
-
 
         public void SendAndScoringInputSentence(string sentence)
         {
             var currentIndex = currentTaskSentenceIndex;
             if (currentIndex >= _taskSentences.Count) { return; }
+            // 最初のセクション打ち終わったらリセットする
+            else if (currentIndex == 0) { ResetPracticeResult(); }
 
             var currentJudgeSentence = _judgeSentences[currentIndex];
             var sectionResult = new PracticeSectionResult(currentJudgeSentence, sentence);
@@ -68,8 +60,9 @@
 
         private void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
-            ClearTaskAndJudgeSentences();
-            ResetPracticeResult();
+            _taskSentences.Clear();
+            _judgeSentences.Clear();
+
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
                 var sentences = Content[sectionIdx].Sentences;
