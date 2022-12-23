@@ -2,7 +2,6 @@
 {
     public class PracticeResult
     {
-        private bool hasResult = false;
         private SortedDictionary<int, PracticeSectionResult> practiceSectionResults;
         private int collectCount;
         private int wrongCount;
@@ -11,13 +10,14 @@
         public PracticeResult()
         {
             practiceSectionResults = new SortedDictionary<int, PracticeSectionResult>();
-            hasResult = false;
+            collectCount = 0;
+            wrongCount = 0;
+            accuracy = 0;
         }
 
         public void AddSectionResult(int key, PracticeSectionResult result)
         {
             practiceSectionResults.Add(key, result);
-            hasResult = true;
         }
 
         public void SetResultValues()

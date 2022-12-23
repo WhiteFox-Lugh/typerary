@@ -34,20 +34,26 @@
 </div>
 
 @code {
+    private const int F2EndCount = 3;
     private const string EnterKeyStr = "Enter";
     private static string currentTaskSentence = "";
     private static string currentInputSentence = "";
+    private static int F2Count = 0;
 
     private PracticeController controller;
 
     [Parameter]
     public BookContent[] BookData { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() => await Init();
+
+    private async Task Init(){
         controller = Practice.controller;
-        controller.ResetTaskIndex();
+        controller.Init();
         currentTaskSentence = controller.GetFirstTaskSentence();
+        currentInputSentence = "";
+        F2Count = 0;
+        await Task.CompletedTask;
     }
 
     private void GoNextSection()
@@ -76,11 +82,29 @@
     private void OnKeyUp(KeyboardEventArgs keyEvent)
     {
         Console.WriteLine("********START OnKeyUp********");
-        // Ctrl + Enter キーの同時押しのみ
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
-        if (!(isCtrlKeyDown && isEnterKeyDown)) { return; }
-        GoNextSection();
+        var isF2KeyUp = keyEvent.Key.Equals("F2");
+
+        if (isCtrlKeyDown && isEnterKeyDown) { 
+            GoNextSection();
+        }
+        else if (isF2KeyUp){
+            F2Count++;
+
+            if (F2Count >= F2EndCount){
+                currentTaskSentence = "";
+                // 入力文章の送信
+                controller.SendAndScoringInputSentence(currentInputSentence);
+                controller.DoFinishProcess();
+                currentInputSentence = "";
+                Console.WriteLine("********** F2 END **********");
+            }
+        }
+        else {
+            F2Count = 0;
+        }
+
         Console.WriteLine("********END OnKeyUp********");
     }
 

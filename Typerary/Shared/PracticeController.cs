@@ -24,13 +24,19 @@
         public PracticeController(Book book)
         {
             _bookContents = book.Content;
+            Init();
+        }
+
+        public void Init()
+        {
             SetTaskSentences();
             ResetTaskIndex();
             ResetPracticeResult();
+            CurrentPracticeResult = new();
             IsFinished = false;
         }
 
-        public void ResetTaskIndex() => currentTaskSentenceIndex = 0;
+        private void ResetTaskIndex() => currentTaskSentenceIndex = 0;
 
         public string GetFirstTaskSentence() => _taskSentences[0];
 
@@ -60,9 +66,8 @@
             CurrentPracticeResult.AddSectionResult(currentIndex, sectionResult);
         }
 
-        public void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
+        private void SetTaskSentences(int sectionNumber = 0, int sentenceNumber = 0)
         {
-            IsFinished = false;
             ClearTaskAndJudgeSentences();
             ResetPracticeResult();
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)

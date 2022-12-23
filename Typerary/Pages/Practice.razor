@@ -14,7 +14,7 @@
         {
             <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenTabs @bind-SelectedIndex=@tabIndex>
+                <RadzenTabs @bind-SelectedIndex=@tabIndex Change=@OnChange>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
                             <PracticeUserInput />
@@ -48,9 +48,7 @@
     private enum TabIndex
     {
         Practice = 0,
-        Config = 1,
-        ResultSummary = 2,
-        ResultDetail = 3
+        ResultSummary = 1
     };
 
     private static bool isLoadComplete = false;
@@ -68,12 +66,10 @@
         {
             // read json data
             var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{bookId}.json");
-            if (book is null) throw new InvalidDataException("Exception: json data load failed! (´·ω·`)");
+            if (book is null) throw new InvalidDataException("Exception: json data load failed");
 
             // set data
             bookTitle = book.Title;
-            if (controller != null) { return; }
-
             controller = new PracticeController(book);
             isLoadComplete = true;
         }
@@ -96,5 +92,9 @@
         var sanitizer = new HtmlSanitizer();
         var sanitizedId = sanitizer.Sanitize(originalBookId);
         return sanitizedId;
+    }
+
+    private void OnChange(int index){
+
     }
 }
