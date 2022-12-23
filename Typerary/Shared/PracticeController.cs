@@ -36,6 +36,8 @@
 
         public string GetFirstTaskSentence() => _taskSentences[0];
 
+        public bool IsFirstSentence() => currentTaskSentenceIndex == 0;
+
         public bool HasNextTaskSentence() => currentTaskSentenceIndex + 1 < _taskSentences.Count;
 
         public string? GetNextTaskSentence() => HasNextTaskSentence() ? _taskSentences[currentTaskSentenceIndex + 1] : null;

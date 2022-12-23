@@ -34,6 +34,8 @@
 </div>
 
 @code {
+    private const string EndAnnounceMent = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
+    private const string HiddenText = "### 隠し要素に気づくとはとても鋭いですね。現時点では何もありませんが、本リリースの際は何か起きるかもしれませんね。";
     private const int F2EndCount = 3;
     private const string EnterKeyStr = "Enter";
     private static string currentTaskSentence = "";
@@ -67,27 +69,30 @@
             currentTaskSentence = nextTaskSentence;
             // 入力文章の送信
             controller.SendAndScoringInputSentence(currentInputSentence);
+            currentInputSentence = "";
         }
         // 最終セクション
         else
         {
-            currentTaskSentence = "";
-            // 入力文章の送信
-            controller.SendAndScoringInputSentence(currentInputSentence);
-            controller.DoFinishProcess();
+            Finish();
         }
-        currentInputSentence = "";
         controller.IncrementTaskSentenceIndex();
     }
 
     private void OnKeyUp(KeyboardEventArgs keyEvent)
     {
-        if (controller.IsFinished) { return; }
-
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
         var isF2KeyUp = keyEvent.Key.Equals("F2");
 
+        if (controller.IsFinished)
+        {
+            if (isCtrlKeyDown && isEnterKeyDown && currentInputSentence.Contains(EndAnnounceMent))
+            {
+                currentTaskSentence = HiddenText;
+            }
+            return;
+        }
         if (isCtrlKeyDown && isEnterKeyDown)
         {
             GoNextSection();
@@ -95,15 +100,7 @@
         else if (isF2KeyUp)
         {
             F2Count++;
-
-            if (F2Count >= F2EndCount)
-            {
-                currentTaskSentence = "";
-                // 入力文章の送信
-                controller.SendAndScoringInputSentence(currentInputSentence);
-                controller.DoFinishProcess();
-                currentInputSentence = "";
-            }
+            if (F2Count >= F2EndCount) { Finish(); }
         }
         else
         {
@@ -112,9 +109,25 @@
 
     }
 
+    private void Finish()
+    {
+        // 何も打たずに練習終了はしない
+        if (controller.IsFirstSentence() && currentInputSentence.Equals("")){ return; }
+
+        currentTaskSentence = EndAnnounceMent;
+        // 入力文章の送信
+        // 空なら送信しない
+        if (!currentInputSentence.Equals(""))
+        {
+            controller.SendAndScoringInputSentence(currentInputSentence);
+        }
+
+        controller.DoFinishProcess();
+        currentInputSentence = "";
+    }
+
     private void OnInput(string? value)
     {
-        if (controller.IsFinished) { return; }
         if (value is null) return;
         currentInputSentence = value;
     }
