@@ -14,23 +14,29 @@
         {
             <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenTabs @bind-SelectedIndex=@tabIndex>
+                <RadzenTabs @bind-SelectedIndex=@tabIndex Change=@OnChange>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
                             <PracticeUserInput />
                         </RadzenTabsItem>
 
+                        <!--
+                            TODO: 設定画面を作る
                         <RadzenTabsItem Text="Config">
                             <PracticeConfig />
                         </RadzenTabsItem>
+                        -->
 
                         <RadzenTabsItem Text="Result(Summary)">
-                            <PracticeResultSummary />
+                            <PracticeResultSummary CurrentResult=@controller.CurrentPracticeResult />
                         </RadzenTabsItem>
 
+                        <!---
+                            TODO; リザルト詳細を作る
                         <RadzenTabsItem Text="Result(Detail)">
                             <PracticeResultDetail />
                         </RadzenTabsItem>
+                        -->
                     </Tabs>
                 </RadzenTabs>
             </Animate>
@@ -39,36 +45,45 @@
 </Animate>
 
 @code {
+    private enum TabIndex
+    {
+        Practice = 0,
+        ResultSummary = 1
+    };
+
     private static bool isLoadComplete = false;
     private static string bookTitle = "";
     private static int tabIndex = 0;
-    private string _bookId;
+    private static string bookId;
     public static PracticeController controller;
 
     [Parameter]
-    public string BookId { get => _bookId; set => _bookId = GetSanitizedBookId(value); }
+    public string BookId { get => bookId; set => bookId = GetSanitizedBookId(value); }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{_bookId}.json");
-            if (book is null) throw new InvalidDataException("Exception: json data load failed! (´·ω·`)");
+            // read json data
+            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{bookId}.json");
+            if (book is null) throw new InvalidDataException("Exception: json data load failed");
+
+            // set data
             bookTitle = book.Title;
             controller = new PracticeController(book);
             isLoadComplete = true;
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
+            Console.Error.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
         }
         catch (TaskCanceledException ex)
         {
-            Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
+            Console.Error.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Exception \n{ex.Message}");
+            Console.Error.WriteLine($"Unhandled Exception \n{ex.Message}");
         }
     }
 
@@ -77,5 +92,9 @@
         var sanitizer = new HtmlSanitizer();
         var sanitizedId = sanitizer.Sanitize(originalBookId);
         return sanitizedId;
+    }
+
+    private void OnChange(int index){
+
     }
 }
