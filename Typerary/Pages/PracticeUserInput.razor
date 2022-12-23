@@ -47,7 +47,8 @@
 
     protected override async Task OnInitializedAsync() => await Init();
 
-    private async Task Init(){
+    private async Task Init()
+    {
         controller = Practice.controller;
         controller.Init();
         currentTaskSentence = controller.GetFirstTaskSentence();
@@ -81,47 +82,48 @@
 
     private void OnKeyUp(KeyboardEventArgs keyEvent)
     {
-        Console.WriteLine("********START OnKeyUp********");
+        if (controller.IsFinished) { return; }
+
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
         var isF2KeyUp = keyEvent.Key.Equals("F2");
 
-        if (isCtrlKeyDown && isEnterKeyDown) { 
+        if (isCtrlKeyDown && isEnterKeyDown)
+        {
             GoNextSection();
         }
-        else if (isF2KeyUp){
+        else if (isF2KeyUp)
+        {
             F2Count++;
 
-            if (F2Count >= F2EndCount){
+            if (F2Count >= F2EndCount)
+            {
                 currentTaskSentence = "";
                 // 入力文章の送信
                 controller.SendAndScoringInputSentence(currentInputSentence);
                 controller.DoFinishProcess();
                 currentInputSentence = "";
-                Console.WriteLine("********** F2 END **********");
             }
         }
-        else {
+        else
+        {
             F2Count = 0;
         }
 
-        Console.WriteLine("********END OnKeyUp********");
     }
 
     private void OnInput(string? value)
     {
+        if (controller.IsFinished) { return; }
         if (value is null) return;
-        Console.WriteLine(value);
         currentInputSentence = value;
     }
 
     private void OnCopy()
     {
-        Console.WriteLine("Copy detected");
     }
 
     private void OnPaste()
     {
-        Console.WriteLine("Paste Detected");
     }
 }
