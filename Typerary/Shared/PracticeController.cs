@@ -46,6 +46,9 @@
 
         private void ResetPracticeResult() => CurrentPracticeResult = new();
 
+        public int GetSectionCount() => _taskSentences.Count();
+
+        public int GetCurrentSectionNumber() => currentTaskSentenceIndex + 1;
 
         public void SendAndScoringInputSentence(string sentence)
         {

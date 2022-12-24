@@ -1,13 +1,13 @@
 <div class="container-fluid my-2">
     <div class="row rz-border-radius-5">
         <div class="col-6">
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="mb-2">本文</RadzenText>
             <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
                 @((MarkupString)Markdown.ToHtml(currentTaskSentence))
             </p>
         </div>
         <div class="col-6">
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="mb-2">入力</RadzenText>
             <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeyup=@(args => OnKeyUp(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
         </div>
     </div>
@@ -16,11 +16,16 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-6">
-
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
+                セクション:
+            </RadzenText>
+            <p Style="font-size: 1.1rem;">
+                現在: <strong>@(currentSectionNumber)</strong> / 全体: @(allSectionNumber)
+            </p>
             <!-- TODO: タイマーをここに用意したい -->
         </div>
         <div class="col-3">
-            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">
+            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
                 操作:
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
@@ -45,6 +50,8 @@
     private static string currentTaskSentence = "";
     private static string currentInputSentence = "";
     private static int F2Count = 0;
+    private static int currentSectionNumber = 0;
+    private static int allSectionNumber = 0;
 
     private PracticeController controller;
 
@@ -60,6 +67,8 @@
         currentTaskSentence = controller.GetFirstTaskSentence();
         currentInputSentence = "";
         F2Count = 0;
+        allSectionNumber = controller.GetSectionCount();
+        currentSectionNumber = controller.GetCurrentSectionNumber();
         await Task.CompletedTask;
     }
 
@@ -77,13 +86,15 @@
             // 入力文章の送信
             controller.SendAndScoringInputSentence(currentInputSentence);
             currentInputSentence = "";
+            controller.IncrementTaskSentenceIndex();
+            currentSectionNumber = controller.GetCurrentSectionNumber();
         }
         // 最終セクション
         else
         {
             Finish();
+            controller.IncrementTaskSentenceIndex();
         }
-        controller.IncrementTaskSentenceIndex();
     }
 
     private void OnKeyUp(KeyboardEventArgs keyEvent)
