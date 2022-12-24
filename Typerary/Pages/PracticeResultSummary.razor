@@ -98,6 +98,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (CurrentResult is null){ return; }
         collectCount = CurrentResult.GetCollectCount();
         wrongCount = CurrentResult.GetWrongCount();
         accuracy = CurrentResult.GetAccuracy();
