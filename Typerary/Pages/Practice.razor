@@ -65,6 +65,7 @@
         try
         {
             // read json data
+            tabIndex = 0;
             var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{bookId}.json");
             if (book is null) throw new InvalidDataException("Exception: json data load failed");
 
