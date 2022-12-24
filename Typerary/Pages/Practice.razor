@@ -85,6 +85,9 @@
         {
             Console.Error.WriteLine($"Unhandled Exception \n{ex.Message}");
         }
+        finally {
+            await Task.CompletedTask;
+        }
     }
 
     private string GetSanitizedBookId(string originalBookId)

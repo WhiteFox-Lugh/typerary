@@ -7,23 +7,32 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="text-left mx-4 px-2">
-                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant">
+                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant mb-5">
                         Summary
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Collect @(collectCount)
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="text-primary py-2">
+                        正しく打った文字数:
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Wrong @(wrongCount)
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right" class="text-primary">
+                        <span Style="font-size: 2.5rem;">@(collectCount)</span> 文字
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Accuracy @(accuracy.ToString("0.00")) %
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="py-2">
+                        間違えた文字数:
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right">
+                        <span Style="font-size: 2.5rem;">@(wrongCount)</span> 文字
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="py-2">
+                        精度:
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right">
+                        <span Style="font-size: 2.25rem;">@(accuracy.ToString("0"))</span>@((accuracy % 1.0).ToString(".000")) %
                     </RadzenText>
                 </div>
             </div>
             <div class="col-lg-9">
                 <div>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant p-3">
+                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant mb-3">
                         Section Result
                     </RadzenText>
                 </div>
@@ -51,7 +60,7 @@
                                 <div class="container">
                                     <div class="col">
                                         <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
-                                            @((MarkupString)Markdown.ToHtml(section.InputSentence))
+                                            @((MarkupString)Markdown.ToHtml(section.InputSentence.Replace("\n", "&#x23CE;")))
                                         </p>
                                     </div>
                                 </div>
@@ -73,8 +82,10 @@
                         </div>
                         <div class="w-100">
                             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
-                                正解： @(section.CollectCount) 　/　
-                                不正解：　@(section.WrongCount)　（<span style="background:#e6e6ff; font-weight:bold">置換</span>：　@(section.WrongReplaceCount)　/ <del style="background:#ffe6e6; font-weight:bold">余分</del>：　@(section.WrongDeleteCount)　/ <ins style="background:#e6ffe6; font-weight:bold">不足</ins>：　@(section.WrongInsertCount)）
+                                正しく打った文字数： @(section.CollectCount)
+                            </RadzenText>
+                            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
+                                間違えた文字数：　@(section.WrongCount)　（<span style="background:#e6e6ff; font-weight:bold">置換</span>：　@(section.WrongReplaceCount)　/ <del style="background:#ffe6e6; font-weight:bold">余分</del>：　@(section.WrongDeleteCount)　/ <ins style="background:#e6ffe6; font-weight:bold">不足</ins>：　@(section.WrongInsertCount)）
                             </RadzenText>
                         </div>
                     </Template>
@@ -98,6 +109,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (CurrentResult is null) { return; }
+        if (!Practice.controller.IsFinished) { Practice.controller.DoFinishProcess(); }
         collectCount = CurrentResult.GetCollectCount();
         wrongCount = CurrentResult.GetWrongCount();
         accuracy = CurrentResult.GetAccuracy();
