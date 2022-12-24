@@ -1,9 +1,9 @@
 {
   "Histories": [
     {
-      "UpdateDate": "2022/09/18",
-      "Version": "1.0",
-      "DetailText": "## Typerary をリリース :tada: \n\n 3作品を追加しました。 \n - ごん狐 \n - 注文の多い料理店 \n - The Tale of Peter Rabbit"
+      "UpdateDate": "2022/12/24",
+      "Version": "alpha-1.0",
+      "DetailText": "## Typerary のプレリリース :tada: \n\n 2作品を追加しました。[タイパー Advent Calendar 2022](https://adventar.org/calendars/7609) 12/24 の記事の公開とあわせています。 \n - ごん狐(一のみ) \n - The Tale of Peter Rabbit"
     }
   ]
 }
