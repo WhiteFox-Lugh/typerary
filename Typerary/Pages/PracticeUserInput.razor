@@ -1,12 +1,12 @@
 <div class="container-fluid my-2">
     <div class="row rz-border-radius-5">
-        <div class="col">
+        <div class="col-6">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">本文</RadzenText>
             <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
                 @((MarkupString)Markdown.ToHtml(currentTaskSentence))
             </p>
         </div>
-        <div class="col">
+        <div class="col-6">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H4" class="mb-2">入力</RadzenText>
             <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@currentInputSentence @onkeyup=@(args => OnKeyUp(args)) @oncopy=@(args => OnCopy()) @onpaste=@(args => OnPaste()) @oninput=@(args => OnInput(args.Value.ToString())) />
         </div>
@@ -15,20 +15,24 @@
 
 <div class="container-fluid mt-4">
     <div class="row">
-        <div class="col">
+        <div class="col-6">
+
             <!-- TODO: タイマーをここに用意したい -->
         </div>
-        <div class="col">
+        <div class="col-3">
             <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">
                 操作:
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
-                ・Ctrl 押しながら Enter : 次のセクション
+                ・Ctrl 押しながら Enter : 次の文へ
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
-                ・F2 を3回連続押す : 終了
+                ・F2 を3回連続押す : 練習終了
             </RadzenText>
-
+        </div>
+        <div class="col-3">
+            <RadzenButton Shade="Shade.Light" Click=@(args => OnClickNextButton()) Text="次の文へ(Ctrl + Enter)" ButtonStyle="ButtonStyle.Primary" class="w-75 mb-3"/>
+            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@(args => Finish()) Text="練習終了 (F2 3回連続)" ButtonStyle="ButtonStyle.Danger" class="w-75"/>
         </div>
     </div>
 </div>
@@ -61,6 +65,9 @@
 
     private void GoNextSection()
     {
+        // すでに終わっているなら何もしない
+        if (controller.IsFinished) { return; }
+
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
         if (controller.HasNextTaskSentence())
@@ -111,8 +118,10 @@
 
     private void Finish()
     {
-        // 何も打たずに練習終了はしない
-        if (controller.IsFirstSentence() && currentInputSentence.Equals("")){ return; }
+        // すでに終わっているなら何もしない
+        if (controller.IsFinished) { return; }
+            // 何も打たずに練習終了はしない
+        if (controller.IsFirstSentence() && currentInputSentence.Equals("")) { return; }
 
         currentTaskSentence = EndAnnounceMent;
         // 入力文章の送信
@@ -124,6 +133,11 @@
 
         controller.DoFinishProcess();
         currentInputSentence = "";
+    }
+
+    private void OnClickNextButton()
+    {
+        GoNextSection();
     }
 
     private void OnInput(string? value)
