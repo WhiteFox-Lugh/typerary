@@ -7,23 +7,23 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="text-left mx-4 px-2">
-                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant">
+                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant mb-3">
                         Summary
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Collect @(collectCount)
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
+                        <span> 正しく打った文字数: @(collectCount)</span>
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Wrong @(wrongCount)
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
+                        <span> 間違えた文字数: @(wrongCount)</span>
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant">
-                        Accuracy @(accuracy.ToString("0.00")) %
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5">
+                        <span>精度 @(accuracy.ToString("0.00")) %</span>
                     </RadzenText>
                 </div>
             </div>
             <div class="col-lg-9">
                 <div>
-                    <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.H5" class="cormonant p-3">
+                    <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H4" class="cormonant mb-3">
                         Section Result
                     </RadzenText>
                 </div>
@@ -51,7 +51,7 @@
                                 <div class="container">
                                     <div class="col">
                                         <p class="w-100 my-3" Style="font-size: 1.2rem; line-height: 2em; user-select:none">
-                                            @((MarkupString)Markdown.ToHtml(section.InputSentence))
+                                            @((MarkupString)Markdown.ToHtml(section.InputSentence.Replace("\n", "&#x23CE;")))
                                         </p>
                                     </div>
                                 </div>
