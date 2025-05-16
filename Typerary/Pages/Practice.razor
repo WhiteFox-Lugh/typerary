@@ -1,4 +1,8 @@
-﻿@page "/practice/{BookId}"
+﻿#if DEBUG
+@page "/typerary/practice/{BookId}"
+#else
+@page "/practice/{BookId}"
+#endif
 @inject HttpClient Http
 @inject NavigationManager Nav;
 
