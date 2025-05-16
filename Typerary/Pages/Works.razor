@@ -88,9 +88,7 @@
         
     }
 
-    private string GetUrl(string bookId){
-        return $"/practice/{bookId}";
-    }
+    private string GetUrl(string bookId) => $"/typerary/practice/{bookId}";
 
     async void OnClickResourceButton(string url){
         await JsRuntime.InvokeAsync<object>("open", url, "_blank");
