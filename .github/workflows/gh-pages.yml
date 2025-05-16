@@ -22,7 +22,7 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish typerary/typerary.csproj -p:GHPages=true -c:Release -o:public
+        run: dotnet publish Typerary/Typerary.csproj -p:GHPages=true -c:Release -o:public
 
       # Deploy the site
       - name: Deploy
