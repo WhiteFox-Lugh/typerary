@@ -65,7 +65,7 @@
 
     private async Task Init()
     {
-        controller = Practice.controller;
+        controller = Practice.Controller;
         controller.Init();
         currentTaskSentence = controller.GetFirstTaskSentence();
         currentInputSentence = "";
@@ -160,11 +160,7 @@
         currentInputSentence = value;
     }
 
-    private void OnCopy()
-    {
-    }
+    private void OnCopy() { }
 
-    private void OnPaste()
-    {
-    }
+    private void OnPaste() { }
 }

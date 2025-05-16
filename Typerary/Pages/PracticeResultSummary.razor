@@ -110,7 +110,7 @@
     protected override async Task OnInitializedAsync()
     {
         if (CurrentResult is null) { return; }
-        if (!Practice.controller.IsFinished) { Practice.controller.DoFinishProcess(); }
+        if (!Practice.Controller.IsFinished) { Practice.Controller.DoFinishProcess(); }
         collectCount = CurrentResult.GetCollectCount();
         wrongCount = CurrentResult.GetWrongCount();
         accuracy = CurrentResult.GetAccuracy();
