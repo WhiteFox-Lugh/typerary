@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
     <script src="_content/BlazorAnimate/blazorAnimateInterop.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script>
+        var baseHref = window.location.pathname.endsWith('/')
+            ? window.location.pathname
+            : window.location.pathname + '/';
+        document.write('<base href="' + baseHref + '">');
+    </script>
 </head>
 
 <body style="padding-top: 4rem">
