@@ -2,9 +2,9 @@
 {
     public class PracticeController
     {
-        private readonly BookContent[] _bookContents;
-        private readonly List<string> _taskSentences = new();
-        private readonly List<string> _judgeSentences = new();
+        private readonly BookContent[]? _bookContents;
+        private readonly List<string?> _taskSentences = new();
+        private readonly List<string?> _judgeSentences = new();
         private int currentTaskSentenceIndex = 0;
 
         public PracticeResult CurrentPracticeResult { get; private set; }
@@ -34,7 +34,7 @@
             IsFinished = false;
         }
 
-        public string GetFirstTaskSentence() => _taskSentences[0];
+        public string? GetFirstTaskSentence() => _taskSentences[0];
 
         public bool IsFirstSentence() => currentTaskSentenceIndex == 0;
 
@@ -71,13 +71,16 @@
             for (var sectionIdx = sectionNumber; sectionIdx < Content.Length; ++sectionIdx)
             {
                 var sentences = Content[sectionIdx].Sentences;
-                for (var sentenceIdx = (sectionIdx == sectionNumber) ? sentenceNumber : 0; sentenceIdx < sentences.Length; ++sentenceIdx)
-                {
-                    var taskSentence = sentences[sentenceIdx].OriginSentence;
-                    _taskSentences.Add(taskSentence);
-                    var judgeSentence = sentences[sentenceIdx].JudgeSentence;
-                    _judgeSentences.Add(judgeSentence);
-                }
+                if (sentences != null)
+                    for (var sentenceIdx = (sectionIdx == sectionNumber) ? sentenceNumber : 0;
+                         sentenceIdx < sentences.Length;
+                         ++sentenceIdx)
+                    {
+                        var taskSentence = sentences[sentenceIdx].OriginSentence;
+                        _taskSentences.Add(taskSentence);
+                        var judgeSentence = sentences[sentenceIdx].JudgeSentence;
+                        _judgeSentences.Add(judgeSentence);
+                    }
             }
         }
 

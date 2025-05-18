@@ -5,9 +5,9 @@ namespace Typerary.Shared
     public class BookSentence
     {
         [JsonInclude]
-        public string OriginSentence { get; set; }
+        public string? OriginSentence { get; set; }
         
         [JsonInclude]
-        public string JudgeSentence { get; set; }
+        public string? JudgeSentence { get; set; }
     }
 }

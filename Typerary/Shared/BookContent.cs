@@ -8,6 +8,6 @@ namespace Typerary.Shared
         public string? Section { get; set; }
         
         [JsonInclude]
-        public BookSentence[] Sentences { get; set; }
+        public BookSentence[]? Sentences { get; set; }
     }
 }

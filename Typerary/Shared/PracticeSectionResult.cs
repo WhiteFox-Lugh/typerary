@@ -54,11 +54,11 @@ namespace Typerary.Shared
         public int WrongInsertCount { get; private set; } = 0;
         public int WrongReplaceCount { get; private set; } = 0;
 
-        public string JudgeSentence { init; get; }
+        public string? JudgeSentence { init; get; }
         public string InputSentence { init; get; }
         public string DiffMarkUpSentence { get; private set; }
 
-        public PracticeSectionResult(string judgeSentence, string inputSentence)
+        public PracticeSectionResult(string? judgeSentence, string inputSentence)
         {
             dmp ??= new();
             JudgeSentence = judgeSentence;
