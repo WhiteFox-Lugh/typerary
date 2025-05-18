@@ -1,7 +1,10 @@
-﻿namespace Typerary.Shared
+﻿using System.Text.Json.Serialization;
+
+namespace Typerary.Shared
 {
     public class ReleaseHistoryMetadata
     {
+        [JsonInclude]
         public List<ReleaseHistory>? Histories { get; set; }
     }
 
@@ -16,8 +19,13 @@
             return res;
         }
 
+        [JsonInclude]
         public string? UpdateDate { get; set; }
+        
+        [JsonInclude]
         public string? Version { get; set; }
+        
+        [JsonInclude]
         public string? DetailText { get; set; }
     }
 }
