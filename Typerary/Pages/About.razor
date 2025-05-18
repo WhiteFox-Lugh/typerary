@@ -85,7 +85,7 @@
                             <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H4" class="mb-5 head-underline">利用規約</RadzenText>
 
                             <div class="text-left mx-4 px-5">
-                                @((MarkupString)Markdown.ToHtml(tos.ToString()))
+                                @((MarkupString)Markdown.ToHtml(_tos.ToString()))
                             </div>
                         </div>
                     </div>
@@ -158,15 +158,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <RadzenCard Class="rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0 ml-2" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
-                                        <RadzenText TextStyle="TextStyle.H6" Class="rz-color-primary-light"><strong>Account</strong></RadzenText>
-                                        <div class="col-lg">
-                                            <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">GitHub</RadzenText>
-                                            <RadzenLink Path="https://github.com/WhiteFox-Lugh" Text="WhiteFox-Lugh" />
-                                            <RadzenText TextStyle="TextStyle.Overline" Class="rz-color-primary-light d-flex mt-3 mb-0">Twitter</RadzenText>
-                                            <RadzenLink Path="https://twitter.com/Arthur_Lugh" Text="Arthur_Lugh" />
-                                        </div>
-                                    </RadzenCard>
                                 </div>
                             </RadzenCard>
                         </div>
@@ -179,17 +170,15 @@
 
 @code {
     private const string DefaultString = "Something went wrong. Please reload this page.";
-    private StringBuilder tos = new();
+    private StringBuilder _tos = new();
 
     protected override async Task OnInitializedAsync()
     {
         var tosData = await Http.GetAsync("./misc/tos.md");
         if (tosData.StatusCode != System.Net.HttpStatusCode.OK){
-            tos.Append(DefaultString);
+            _tos.Append(DefaultString);
             return;
         }
-
-        tos.Append(await tosData.Content.ReadAsStringAsync());
+        _tos.Append(await tosData.Content.ReadAsStringAsync());
     }
-
 }
