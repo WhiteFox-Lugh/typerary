@@ -25,9 +25,6 @@
             <p Style="font-size: 1.1rem;">
                 現在: <strong>@(_currentSectionNumber)</strong> / 全体: @(_allSectionNumber)
             </p>
-
-            <!-- FIXME: bug 直す-->
-            <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="text-secondary">アルファ版バグ：タイトルと課題文章が一致しない場合はリロードしてください!!（のちにバグ修正対応します）</RadzenText>
             <!-- TODO: タイマーをここに用意したい -->
         </div>
         <div class="col-3">
@@ -49,69 +46,75 @@
 </div>
 
 @code {
-    private const string EndAnnounceMent = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
+    private const string EndAnnouncement = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
     private const string HiddenText = "### 隠し要素に気づくとはとても鋭いですね。現時点では何もありませんが、本リリースの際は何か起きるかもしれませんね。";
     private const int F2EndCount = 3;
     private const string EnterKeyStr = "Enter";
-    private static string? _currentTaskSentence = "";
-    private static string _currentInputSentence = "";
+    private static string? _currentTaskSentence = string.Empty;
+    private static string _currentInputSentence = string.Empty;
     private static int _f2Count = 0;
     private static int _currentSectionNumber = 0;
     private static int _allSectionNumber = 0;
-
-    private PracticeController _controller;
-
-    [Parameter]
-    public BookContent[] BookData { get; set; }
 
     protected override async Task OnInitializedAsync() => await Init();
 
     private async Task Init()
     {
-        _controller = Practice.Controller;
-        _controller.Init();
-        _currentTaskSentence = _controller.GetFirstTaskSentence();
-        _currentInputSentence = "";
+        var controller = Practice.Controller;
+        if (controller == null) { return; }
+        
+        controller.Reset();
+        _currentTaskSentence = controller.GetFirstTaskSentence();
+        _currentInputSentence = string.Empty;
         _f2Count = 0;
-        _allSectionNumber = _controller.GetSectionCount();
-        _currentSectionNumber = _controller.GetCurrentSectionNumber();
+        _allSectionNumber = controller.GetSectionCount();
+        _currentSectionNumber = controller.GetCurrentSectionNumber();
         await Task.CompletedTask;
     }
 
     private void GoNextSection()
     {
+        var controller = Practice.Controller;
+        if (controller == null) { return; }
+        
         // すでに終わっているなら何もしない
-        if (_controller.IsFinished) { return; }
+        if (controller.IsFinished) { return; }
 
         // 次の文章があるかどうか?
         // TODO : なければ最終セクションの処理
-        if (_controller.HasNextTaskSentence())
+        if (controller.HasNextTaskSentence())
         {
-            var nextTaskSentence = _controller.GetNextTaskSentence();
+            var nextTaskSentence = controller.GetNextTaskSentence();
             _currentTaskSentence = nextTaskSentence;
             // 入力文章の送信
-            _controller.SendAndScoringInputSentence(_currentInputSentence);
+            controller.SendAndScoringInputSentence(_currentInputSentence);
             _currentInputSentence = "";
-            _controller.IncrementTaskSentenceIndex();
-            _currentSectionNumber = _controller.GetCurrentSectionNumber();
+            controller.IncrementTaskSentenceIndex();
+            _currentSectionNumber = controller.GetCurrentSectionNumber();
         }
         // 最終セクション
         else
         {
             Finish();
-            _controller.IncrementTaskSentenceIndex();
+            controller.IncrementTaskSentenceIndex();
         }
     }
 
     private void OnKeyUp(KeyboardEventArgs keyEvent)
     {
+        var controller = Practice.Controller;
+        if (controller == null)
+        {
+            return;
+        }
+        
         var isCtrlKeyDown = keyEvent.CtrlKey;
         var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
         var isF2KeyUp = keyEvent.Key.Equals("F2");
 
-        if (_controller.IsFinished)
+        if (controller.IsFinished)
         {
-            if (isCtrlKeyDown && isEnterKeyDown && _currentInputSentence.Contains(EndAnnounceMent))
+            if (isCtrlKeyDown && isEnterKeyDown && _currentInputSentence.Contains(EndAnnouncement))
             {
                 _currentTaskSentence = HiddenText;
             }
@@ -135,21 +138,25 @@
 
     private void Finish()
     {
+        var controller = Practice.Controller;
+        if (controller == null) { return; }
+        
         // すでに終わっているなら何もしない
-        if (_controller.IsFinished) { return; }
-            // 何も打たずに練習終了はしない
-        if (_controller.IsFirstSentence() && _currentInputSentence.Equals("")) { return; }
+        if (controller.IsFinished) { return; }
+        
+        // 何も打たずに練習終了はしない
+        if (controller.IsFirstSentence() && string.IsNullOrEmpty(_currentInputSentence)) { return; }
 
-        _currentTaskSentence = EndAnnounceMent;
+        _currentTaskSentence = EndAnnouncement;
+        
         // 入力文章の送信
-        // 空なら送信しない
-        if (!_currentInputSentence.Equals(""))
+        if (!string.IsNullOrEmpty(_currentInputSentence))
         {
-            _controller.SendAndScoringInputSentence(_currentInputSentence);
+            controller.SendAndScoringInputSentence(_currentInputSentence);
         }
 
-        _controller.DoFinishProcess();
-        _currentInputSentence = "";
+        controller.DoFinishProcess();
+        _currentInputSentence = string.Empty;
     }
 
     private void OnClickNextButton()
