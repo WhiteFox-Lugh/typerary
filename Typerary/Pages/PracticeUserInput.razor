@@ -47,7 +47,6 @@
 
 @code {
     private const string EndAnnouncement = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
-    private const string HiddenText = "### 隠し要素に気づくとはとても鋭いですね。現時点では何もありませんが、本リリースの際は何か起きるかもしれませんね。";
     private const int F2EndCount = 3;
     private const string EnterKeyStr = "Enter";
     private static string? _currentTaskSentence = string.Empty;
@@ -116,7 +115,7 @@
         {
             if (isCtrlKeyDown && isEnterKeyDown && _currentInputSentence.Contains(EndAnnouncement))
             {
-                _currentTaskSentence = HiddenText;
+                // TODO : 隠し処理
             }
             return;
         }
