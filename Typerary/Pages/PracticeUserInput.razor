@@ -1,3 +1,40 @@
+@inject IJSRuntime JSRuntime
+
+<script>
+    window.setupTypingShortcuts = function (elementId, dotNetHelper)
+    {
+        const element = document.getElementById(elementId);
+        if (!element) { return; }
+
+        let escTimer = null;
+
+        element.addEventListener('keydown', function (e)
+        {
+            // Ctrl (Win/Linux) または Cmd (Mac) + Enter → 課題送信
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter')
+            {
+                e.preventDefault();
+                dotNetHelper.invokeMethodAsync('OnClickNextButton');
+            }
+
+            // Escape 長押しで練習終了
+            if (e.key === 'Escape')
+            {
+                escTimer = setTimeout(() => {dotNetHelper.invokeMethodAsync('Finish');}, 1000);
+            }
+        });
+
+        element.addEventListener('keyup', function (e)
+        {
+            if (e.key === 'Escape' && escTimer !== null)
+            {
+                clearTimeout(escTimer);
+                escTimer = null;
+            }
+        });
+    }
+</script>
+
 <div class="container-fluid my-2">
     <div class="row rz-border-radius-5">
         <div class="col-6">
@@ -11,7 +48,7 @@
         </div>
         <div class="col-6">
             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="mb-2">入力</RadzenText>
-            <RadzenTextArea Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@_currentInputSentence @onkeyup=@OnKeyUp @oncopy=@OnCopy @onpaste=@OnPaste @oninput=@(args => { if (args.Value != null) { OnInput(args.Value.ToString()); } }) />
+            <RadzenTextArea id="typingArea" Rows=10 class="w-100" AutoComplete="false" Style="font-size: 1.2rem" @bind-Value=@_currentInputSentence @oncopy=@OnCopy @onpaste=@OnPaste @oninput=@(args => { if (args.Value != null) { OnInput(args.Value.ToString()); } }) />
         </div>
     </div>
 </div>
@@ -32,26 +69,24 @@
                 操作:
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
-                ・Ctrl 押しながら Enter : 次の文へ
+                ・Ctrl+Enter : 次の文へ
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
-                ・F2 を3回連続押す : 練習終了
+                ・Esc長押し（1秒）: 練習終了
             </RadzenText>
         </div>
         <div class="col-3">
-            <RadzenButton Shade="Shade.Light" Click=@OnClickNextButton Text="次の文へ(Ctrl + Enter)" ButtonStyle="ButtonStyle.Primary" class="w-75 mb-3"/>
-            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@Finish Text="練習終了 (F2 3回連続)" ButtonStyle="ButtonStyle.Danger" class="w-75"/>
+            <RadzenButton Shade="Shade.Light" Click=@OnClickNextButton Text="次の文へ(Ctrl+Enter)" ButtonStyle="ButtonStyle.Primary" class="w-75 mb-3"/>
+            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@Finish Text="練習終了(Esc 長押し)" ButtonStyle="ButtonStyle.Danger" class="w-75"/>
         </div>
     </div>
 </div>
 
 @code {
     private const string EndAnnouncement = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
-    private const int F2EndCount = 3;
     private const string EnterKeyStr = "Enter";
     private static string? _currentTaskSentence = string.Empty;
     private static string _currentInputSentence = string.Empty;
-    private static int _f2Count = 0;
     private static int _currentSectionNumber = 0;
     private static int _allSectionNumber = 0;
 
@@ -65,7 +100,6 @@
         controller.Reset();
         _currentTaskSentence = controller.GetFirstTaskSentence();
         _currentInputSentence = string.Empty;
-        _f2Count = 0;
         _allSectionNumber = controller.GetSectionCount();
         _currentSectionNumber = controller.GetCurrentSectionNumber();
         await Task.CompletedTask;
@@ -99,43 +133,8 @@
         }
     }
 
-    private void OnKeyUp(KeyboardEventArgs keyEvent)
-    {
-        var controller = Practice.Controller;
-        if (controller == null)
-        {
-            return;
-        }
-        
-        var isCtrlKeyDown = keyEvent.CtrlKey;
-        var isEnterKeyDown = keyEvent.Key.Equals(EnterKeyStr);
-        var isF2KeyUp = keyEvent.Key.Equals("F2");
-
-        if (controller.IsFinished)
-        {
-            if (isCtrlKeyDown && isEnterKeyDown && _currentInputSentence.Contains(EndAnnouncement))
-            {
-                // TODO : 隠し処理
-            }
-            return;
-        }
-        if (isCtrlKeyDown && isEnterKeyDown)
-        {
-            GoNextSection();
-        }
-        else if (isF2KeyUp)
-        {
-            _f2Count++;
-            if (_f2Count >= F2EndCount) { Finish(); }
-        }
-        else
-        {
-            _f2Count = 0;
-        }
-
-    }
-
-    private void Finish()
+    [JSInvokable]
+    public void Finish()
     {
         var controller = Practice.Controller;
         if (controller == null) { return; }
@@ -156,11 +155,24 @@
 
         controller.DoFinishProcess();
         _currentInputSentence = string.Empty;
+        
+        StateHasChanged();
     }
 
-    private void OnClickNextButton()
+    [JSInvokable]
+    public void OnClickNextButton()
     {
         GoNextSection();
+        StateHasChanged();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("setupTypingShortcuts", "typingArea", dotNetRef);
+        }
     }
 
     private void OnInput(string? value)
