@@ -43,7 +43,7 @@
                                     @(work.Author)
                                 </RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.P">
-                                    @(work.AuthorYomi)
+                                    @(work.AuthorKana)
                                 </RadzenText>
                             </Template>
                         </RadzenDataGridColumn>
@@ -73,7 +73,7 @@
     {
         try
         {
-            var data = await Http.GetFromJsonAsync<WorkMetadata>("jsonData/works.json");
+            var data = await Http.GetFromJsonAsync<WorkDataList>("jsonData/works.json");
             if (data != null)
             {
                 _works = data.WorkList;

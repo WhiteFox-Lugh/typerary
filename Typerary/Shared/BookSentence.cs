@@ -2,7 +2,7 @@
 
 namespace Typerary.Shared
 {
-    public class BookSentence
+    public record BookSentence
     {
         [JsonInclude]
         public string? OriginSentence { get; set; }

@@ -3,9 +3,9 @@
     {
       "WorkId": "jp-628",
       "Title": "ごん狐(一のみ)",
-      "TitleYomi": "ごんぎつね",
+      "TitleKana": "ごんぎつね",
       "Author": "新美南吉",
-      "AuthorYomi": "にいみなんきち",
+      "AuthorKana": "にいみなんきち",
       "Language": "Japanese",
       "Source": "青空文庫",
       "WorkUri": "https://www.aozora.gr.jp/cards/000121/card628.html"
@@ -13,7 +13,7 @@
     {
       "WorkId": "en-14838",
       "Title": "The Tale of Peter Rabbit",
-      "TitleYomi": "The Tale of Peter Rabbit by Beatrix Potter",
+      "TitleKana": "The Tale of Peter Rabbit",
       "Author": "Beatrix Potter",
       "Language": "English",
       "Source": "Project Gutenberg",
