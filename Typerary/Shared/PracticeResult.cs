@@ -2,41 +2,32 @@
 {
     public class PracticeResult
     {
-        private SortedDictionary<int, PracticeSectionResult> practiceSectionResults;
-        private int collectCount;
-        private int wrongCount;
-        private double accuracy;
-
-        public PracticeResult()
-        {
-            practiceSectionResults = new SortedDictionary<int, PracticeSectionResult>();
-            collectCount = 0;
-            wrongCount = 0;
-            accuracy = 0;
-        }
+        private readonly SortedDictionary<int, PracticeSectionResult> _practiceSectionResults = new();
+        private int _collectCount;
+        private int _wrongCount;
+        private double _accuracy;
 
         public void AddSectionResult(int key, PracticeSectionResult result)
         {
-            practiceSectionResults.Add(key, result);
+            _practiceSectionResults.Add(key, result);
         }
 
         public void SetResultValues()
         {
-            foreach (var result in practiceSectionResults.Values)
+            foreach (var result in _practiceSectionResults.Values)
             {
-                collectCount += result.CollectCount;
-                wrongCount += result.WrongCount;
+                _collectCount += result.CollectCount;
+                _wrongCount += result.WrongCount;
             }
-            accuracy = 100.0 * collectCount / (collectCount + wrongCount);
-            Console.WriteLine($"Result Set : Collect => {collectCount} / wrongCount => {wrongCount} / Accuracy => {accuracy.ToString("0.00")}");
+            _accuracy = 100.0 * _collectCount / (_collectCount + _wrongCount);
         }
 
-        public int GetCollectCount() => collectCount;
+        public int GetCollectCount() => _collectCount;
 
-        public int GetWrongCount() => wrongCount;
+        public int GetWrongCount() => _wrongCount;
 
-        public double GetAccuracy() => accuracy;
+        public double GetAccuracy() => _accuracy;
 
-        public SortedDictionary<int, PracticeSectionResult> GetSectionResults() => new(practiceSectionResults);
+        public SortedDictionary<int, PracticeSectionResult> GetSectionResults() => new(_practiceSectionResults);
     }
 }
