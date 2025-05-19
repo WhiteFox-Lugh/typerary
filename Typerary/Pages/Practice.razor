@@ -72,7 +72,7 @@
         
         try
         {
-            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{_sanitizedBookId}.json");
+            var book = await Http.GetFromJsonAsync<Book?>($"/jsonData/works/{_sanitizedBookId}.json");
             if (book is null) throw new InvalidDataException("Exception: json data load failed");
 
             // set data
