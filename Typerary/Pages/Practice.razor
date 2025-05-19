@@ -56,8 +56,7 @@
 
     [Parameter]
     public string BookId { get; set; } = string.Empty;
-    
-    public string SanitizedBookId { get => _sanitizedBookId; set => _sanitizedBookId = GetSanitizedBookId(value); }
+
     public static PracticeController? Controller => _controller;
 
     public Practice()
