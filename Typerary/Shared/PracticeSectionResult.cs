@@ -5,9 +5,9 @@ using Shaman.Runtime;
 namespace Typerary.Shared
 {
 
-    public class PracticeSectionResult
+    public sealed class PracticeSectionResult
     {
-        public enum DiffOperation
+        private enum DiffOperation
         {
             Equal,
             Insert,
@@ -15,7 +15,7 @@ namespace Typerary.Shared
             Replace
         }
 
-        public class TyperaryDiff
+        private sealed class TyperaryDiff
         {
             public readonly DiffOperation Operation;
             public readonly ValueString Input;
@@ -37,32 +37,33 @@ namespace Typerary.Shared
                 WrongCount = op switch
                 {
                     DiffOperation.Delete or DiffOperation.Insert => Input.Length,
-                    DiffOperation.Replace => Math.Max(Input.Length, CorrectString.Value.Length),
+                    DiffOperation.Replace when CorrectString.HasValue => Math.Max(Input.Length, CorrectString.Value.Length),
                     _ => 0
                 };
             }
         }
 
-        private static diff_match_patch dmp;
-        private readonly Func<ValueString, string> insertHtmlStyle = (ValueString text) => $"<ins style=\"background:#e6ffe6; font-weight:bold\">{text}</ins>";
-        private readonly Func<ValueString, string> deleteHtmlStyle = (ValueString text) => $"<del style=\"background:#ffe6e6; font-weight:bold\">{text}</del>";
-        private readonly Func<ValueString, ValueString?, string> replaceHtmlStyle = (ValueString wrongText, ValueString? collectText) => $"<span style=\"background:#e6e6ff; font-weight:bold\"><del>{wrongText}</del> &rarr; {collectText}</span>";
-        private readonly Func<ValueString, string> equalHtmlStyle = (ValueString text) => $"<span style=\"color:#666666\">{text}</span>";
-        public int CollectCount { get; private set; } = 0;
-        public int WrongCount { get; private set; } = 0;
-        public int WrongDeleteCount { get; private set; } = 0;
-        public int WrongInsertCount { get; private set; } = 0;
-        public int WrongReplaceCount { get; private set; } = 0;
+        private static diff_match_patch? _dmp;
+        private readonly Func<ValueString, string> _insertHtmlStyle = text => $"<ins style=\"background:#e6ffe6; font-weight:bold\">{text}</ins>";
+        private readonly Func<ValueString, string> _deleteHtmlStyle = text => $"<del style=\"background:#ffe6e6; font-weight:bold\">{text}</del>";
+        private readonly Func<ValueString, ValueString?, string> _replaceHtmlStyle = (wrongText, collectText) => $"<span style=\"background:#e6e6ff; font-weight:bold\"><del>{wrongText}</del> &rarr; {collectText}</span>";
+        private readonly Func<ValueString, string> _equalHtmlStyle = text => $"<span style=\"color:#666666\">{text}</span>";
+        public int CollectCount { get; private set; }
+        public int WrongCount { get; private set; }
+        public int WrongDeleteCount { get; private set; }
+        public int WrongInsertCount { get; private set; }
+        public int WrongReplaceCount { get; private set; }
 
-        public string JudgeSentence { init; get; }
-        public string InputSentence { init; get; }
+        public string? JudgeSentence { get; }
+        public string InputSentence { get; }
         public string DiffMarkUpSentence { get; private set; }
 
-        public PracticeSectionResult(string judgeSentence, string inputSentence)
+        public PracticeSectionResult(string? judgeSentence, string inputSentence)
         {
-            dmp ??= new();
+            _dmp ??= new();
             JudgeSentence = judgeSentence;
             InputSentence = inputSentence;
+            DiffMarkUpSentence = string.Empty;
             CollectCount = 0;
             WrongCount = 0;
             WrongDeleteCount = 0;
@@ -70,7 +71,7 @@ namespace Typerary.Shared
             WrongReplaceCount = 0;
         }
 
-        private List<Diff> GenerateDiff() => dmp.diff_main(InputSentence, JudgeSentence);
+        private List<Diff> GenerateDiff() => _dmp != null ? _dmp.diff_main(InputSentence, JudgeSentence) : new List<Diff>();
 
         private List<TyperaryDiff> ConvertDiffToTyperaryDiff(List<Diff> diffs)
         {
@@ -129,10 +130,10 @@ namespace Typerary.Shared
             {
                 var htmlText = diff.Operation switch
                 {
-                    DiffOperation.Equal => equalHtmlStyle.Invoke(diff.Input),
-                    DiffOperation.Insert => insertHtmlStyle.Invoke(diff.Input),
-                    DiffOperation.Delete => deleteHtmlStyle.Invoke(diff.Input),
-                    DiffOperation.Replace => replaceHtmlStyle.Invoke(diff.Input, diff.CorrectString),
+                    DiffOperation.Equal => _equalHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Insert => _insertHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Delete => _deleteHtmlStyle.Invoke(diff.Input),
+                    DiffOperation.Replace => _replaceHtmlStyle.Invoke(diff.Input, diff.CorrectString),
                     _ => ""
                 };
                 stringBuilder.Append(htmlText);

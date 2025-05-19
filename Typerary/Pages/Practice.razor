@@ -1,20 +1,23 @@
-﻿@page "/practice/{BookId}"
+﻿#if DEBUG
+@page "/typerary/practice/{BookId}"
+#else
+@page "/practice/{BookId}"
+#endif
 @inject HttpClient Http
-@inject NavigationManager Nav;
 
 <PageTitle>Typerary - Practice</PageTitle>
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
     <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
-        @if (!isLoadComplete)
+        @if (!_isLoadComplete)
         {
             <div class="loader">Loading...</div>
         }
         else
         {
-            <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(bookTitle)</RadzenText>
+            <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(_bookTitle)</RadzenText>
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenTabs @bind-SelectedIndex=@tabIndex Change=@OnChange>
+                <RadzenTabs @bind-SelectedIndex=@_tabIndex Change=@OnChange>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
                             <PracticeUserInput />
@@ -28,7 +31,7 @@
                         -->
 
                         <RadzenTabsItem Text="Result(Summary)">
-                            <PracticeResultSummary CurrentResult=@controller.CurrentPracticeResult />
+                            <PracticeResultSummary CurrentResult=@_controller?.CurrentPracticeResult />
                         </RadzenTabsItem>
 
                         <!---
@@ -45,48 +48,52 @@
 </Animate>
 
 @code {
-    private enum TabIndex
-    {
-        Practice = 0,
-        ResultSummary = 1
-    };
-
-    private static bool isLoadComplete = false;
-    private static string bookTitle = "";
-    private static int tabIndex = 0;
-    private static string bookId;
-    public static PracticeController controller;
+    private bool _isLoadComplete;
+    private string? _bookTitle = string.Empty;
+    private int _tabIndex;
+    private string _sanitizedBookId = string.Empty;
+    private static PracticeController? _controller;
 
     [Parameter]
-    public string BookId { get => bookId; set => bookId = GetSanitizedBookId(value); }
+    public string BookId { get; set; } = string.Empty;
+
+    public static PracticeController? Controller => _controller;
+
+    public Practice()
+    {
+        _controller = null;
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        // read json data
+        _tabIndex = 0;
+        _sanitizedBookId = GetSanitizedBookId(BookId);
+        
         try
         {
-            // read json data
-            tabIndex = 0;
-            var book = await Http.GetFromJsonAsync<Book?>($"/jsondata/works/{bookId}.json");
+            var book = await Http.GetFromJsonAsync<Book?>($"/jsonData/works/{_sanitizedBookId}.json");
             if (book is null) throw new InvalidDataException("Exception: json data load failed");
 
             // set data
-            bookTitle = book.Title;
-            controller = new PracticeController(book);
-            isLoadComplete = true;
+            _bookTitle = book.Title;
+            _controller = new PracticeController(book);
+            _isLoadComplete = true;
         }
         catch (HttpRequestException ex)
         {
-            Console.Error.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
+            await Console.Error.WriteLineAsync($"Exception: HttpRequestException \n{ex.Message}");
         }
         catch (TaskCanceledException ex)
         {
-            Console.Error.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
+            await Console.Error.WriteLineAsync($"Exception: TaskCanceledException \n{ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unhandled Exception \n{ex.Message}");
+            await Console.Error.WriteLineAsync($"Unhandled Exception \n{ex.Message}");
         }
-        finally {
+        finally
+        {
             await Task.CompletedTask;
         }
     }
@@ -98,7 +105,5 @@
         return sanitizedId;
     }
 
-    private void OnChange(int index){
-
-    }
+    private void OnChange(int index) { }
 }

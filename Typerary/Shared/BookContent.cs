@@ -1,8 +1,13 @@
-﻿namespace Typerary.Shared
+﻿using System.Text.Json.Serialization;
+
+namespace Typerary.Shared
 {
-    public class BookContent
+    public sealed record BookContent
     {
-        public string? Section { get; set; }
-        public BookSentence[] Sentences { get; set; }
+        [JsonInclude]
+        public string? Section { get; init; }
+        
+        [JsonInclude]
+        public BookSentence[]? Sentences { get; init; }
     }
 }

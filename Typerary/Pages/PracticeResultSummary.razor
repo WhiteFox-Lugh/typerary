@@ -14,19 +14,19 @@
                         正しく打った文字数:
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right" class="text-primary">
-                        <span Style="font-size: 2.5rem;">@(collectCount)</span> 文字
+                        <span Style="font-size: 2.5rem;">@(_collectCount)</span> 文字
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="py-2">
                         間違えた文字数:
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right">
-                        <span Style="font-size: 2.5rem;">@(wrongCount)</span> 文字
+                        <span Style="font-size: 2.5rem;">@(_wrongCount)</span> 文字
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="py-2">
                         精度:
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" TextAlign="TextAlign.Right">
-                        <span Style="font-size: 2.25rem;">@(accuracy.ToString("0"))</span>@((accuracy % 1.0).ToString(".000")) %
+                        <span Style="font-size: 2.25rem;">@(_accuracy.ToString("0"))</span>@((_accuracy % 1.0).ToString(".000")) %
                     </RadzenText>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                         Section Result
                     </RadzenText>
                 </div>
-                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@sectionResults" TItem="Typerary.Shared.PracticeSectionResult" PageSize="1" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                <RadzenDataList WrapItems="true" AllowPaging="true" Data="@_sectionResults" TItem="PracticeSectionResult" PageSize="1" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
                     <Template Context="section">
                         <div class="w-100">
                             <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="p-2">
@@ -95,25 +95,32 @@
     </div>
 </div>
 
-
-
 @code {
-    private bool showValue = true;
-    private int collectCount;
-    private int wrongCount;
-    private double accuracy;
-    private IEnumerable<PracticeSectionResult> sectionResults;
+    private bool _showValue = true;
+    private int _collectCount;
+    private int _wrongCount;
+    private double _accuracy;
+    private IEnumerable<PracticeSectionResult>? _sectionResults;
 
     [Parameter]
-    public PracticeResult CurrentResult { get; set; }
+    public PracticeResult? CurrentResult { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        if (CurrentResult is null) { return; }
-        if (!Practice.controller.IsFinished) { Practice.controller.DoFinishProcess(); }
-        collectCount = CurrentResult.GetCollectCount();
-        wrongCount = CurrentResult.GetWrongCount();
-        accuracy = CurrentResult.GetAccuracy();
-        sectionResults = CurrentResult.GetSectionResults().Values;
+        if (CurrentResult is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        if (Practice.Controller != null && !Practice.Controller.IsFinished)
+        {
+            Practice.Controller.DoFinishProcess();
+        }
+        
+        _collectCount = CurrentResult.GetCollectCount();
+        _wrongCount = CurrentResult.GetWrongCount();
+        _accuracy = CurrentResult.GetAccuracy();
+        _sectionResults = CurrentResult.GetSectionResults().Values;
+        return Task.CompletedTask;
     }
 }

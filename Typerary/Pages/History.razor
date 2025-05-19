@@ -1,4 +1,8 @@
+#if DEBUG
+@page "/typerary/history"
+#else
 @page "/history"
+#endif
 @inject HttpClient Http
 
 <PageTitle>Typerary - History</PageTitle>
@@ -8,7 +12,7 @@
 
         <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-5 article-heading" data-en="History">更新履歴</RadzenText>
 
-        @if (releaseHistories == null)
+        @if (_releaseHistories == null)
         {
             <div class="loader">Loading...</div>
         }
@@ -16,7 +20,7 @@
         {
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
                 <RadzenCard class="mt-5">
-                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@releaseHistories" TItem="ReleaseHistory" PageSize="20" PageNumbersCount="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@_releaseHistories" TItem="ReleaseHistory" PageSize="20" PageNumbersCount="10" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
                         <Template Context="release">
                             <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;">
                                 <div class="container-fluid">
@@ -31,11 +35,14 @@
                                                 </div>
                                             </RadzenBadge>
                                         </div>
-                                        <div class="col-lg-9 p-3">
-                                            <Emoji>
-                                                <p>@((MarkupString)Markdown.ToHtml(release.DetailText))</p>
-                                            </Emoji>
-                                        </div>
+                                        @if (release.DetailText != null)
+                                        {
+                                            <div class="col-lg-9 p-3">
+                                                <Emoji>
+                                                    <p>@((MarkupString)Markdown.ToHtml(release.DetailText))</p>
+                                                </Emoji>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </RadzenCard>
@@ -45,6 +52,7 @@
             </Animate>
         }
 
+        <!--suppress CssUnresolvedCustomProperty -->
         <style>
             .release-date {
                 min-height: 72px;
@@ -55,17 +63,17 @@
 </Animate>
 
 @code {
-    private const string MetadataJsonUri = "jsondata/update-history.json";
-    private List<ReleaseHistory>? releaseHistories;
+    private const string MetadataJsonUri = "jsonData/update-history.json";
+    private List<ReleaseHistory>? _releaseHistories;
 
     protected override async Task OnInitializedAsync()
     {
-        releaseHistories = new();
+        _releaseHistories = new();
         try
         {
             var originData = await Http.GetFromJsonAsync<ReleaseHistoryMetadata>(MetadataJsonUri);
-            releaseHistories = originData.Histories;
-            releaseHistories.Sort((obj1, obj2) => obj1.GetUpdateDateTime() < obj2.GetUpdateDateTime() ? 1 : -1);
+            _releaseHistories = originData?.Histories;
+            _releaseHistories?.Sort((obj1, obj2) => obj1.GetUpdateDateTime() < obj2.GetUpdateDateTime() ? 1 : -1);
         }
         catch (HttpRequestException ex)
         {

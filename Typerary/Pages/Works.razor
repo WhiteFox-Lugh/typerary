@@ -1,4 +1,8 @@
+#if DEBUG
+@page "/typerary/works"
+#else
 @page "/works"
+#endif
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime
 
@@ -9,18 +13,18 @@
 
         <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-5 article-heading" data-en="Works">作品一覧</RadzenText>
 
-        @if (works == null)
+        @if (_works == null)
         {
             <div class="loader">Loading...</div>
         }
         else
         {
             <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
-                <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@works" TItem="WorkData" class="rz-shadow-2 mt-5">
+                <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@_works" TItem="WorkData" class="rz-shadow-2 mt-5">
                     <Columns>
                         <RadzenDataGridColumn Width="5%" TItem="WorkData" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                             <Template Context="work">
-                                @(works.IndexOf(work) + 1)
+                                @(_works.IndexOf(work) + 1)
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn Width="40%" TItem="WorkData" Property="TitleYomi" Title="作品名 / Title">
@@ -39,7 +43,7 @@
                                     @(work.Author)
                                 </RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.P">
-                                    @(work.AuthorYomi)
+                                    @(work.AuthorKana)
                                 </RadzenText>
                             </Template>
                         </RadzenDataGridColumn>
@@ -52,7 +56,7 @@
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn Width="15%" TItem="WorkData" Property="WorkUri" Sortable="false" Filterable="false" Title="ソース / Source">
                             <Template Context="work">
-                                <RadzenButton Click=@(args => OnClickResourceButton(work.WorkUri.ToString())) Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
+                                <RadzenButton Click=@(_ => { if (work.WorkUri != null) { OnClickResourceButton(work.WorkUri.ToString()); } }) Variant="Variant.Outlined" Shade="Shade.Light" Text="@(work.Source)" ButtonStyle="ButtonStyle.Primary" />
                             </Template>
                         </RadzenDataGridColumn>
                     </Columns>
@@ -63,27 +67,30 @@
 </Animate>
 
 @code {
-    private List<WorkData>? works;
+    private List<WorkData>? _works;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var data = await Http.GetFromJsonAsync<WorkMetadata>("jsondata/works.json");
-            works = data.WorkList;
+            var data = await Http.GetFromJsonAsync<WorkDataList>("jsonData/works.json");
+            if (data != null)
+            {
+                _works = data.WorkList;
+            }
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"Exception: HttpRequestException \n{ex.Message}");
-            works = new();
+            _works = new();
         }
         catch (TaskCanceledException ex){
             Console.WriteLine($"Exception: TaskCanceledException \n{ex.Message}");
-            works = new();
+            _works = new();
         }
         catch (Exception ex){
             Console.WriteLine($"Exception \n{ex.Message}");
-            works = new();
+            _works = new();
         }
         
     }
