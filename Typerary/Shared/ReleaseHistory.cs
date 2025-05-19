@@ -2,13 +2,13 @@
 
 namespace Typerary.Shared
 {
-    public class ReleaseHistoryMetadata
+    public record ReleaseHistoryMetadata
     {
         [JsonInclude]
-        public List<ReleaseHistory>? Histories { get; set; }
+        public List<ReleaseHistory>? Histories { get; init; }
     }
 
-    public class ReleaseHistory
+    public record ReleaseHistory
     {
         public DateTime GetUpdateDateTime()
         {
@@ -20,12 +20,12 @@ namespace Typerary.Shared
         }
 
         [JsonInclude]
-        public string? UpdateDate { get; set; }
+        public string? UpdateDate { get; init; }
         
         [JsonInclude]
-        public string? Version { get; set; }
+        public string? Version { get; init; }
         
         [JsonInclude]
-        public string? DetailText { get; set; }
+        public string? DetailText { get; init; }
     }
 }

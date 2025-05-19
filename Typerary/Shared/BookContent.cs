@@ -2,12 +2,12 @@
 
 namespace Typerary.Shared
 {
-    public class BookContent
+    public sealed record BookContent
     {
         [JsonInclude]
-        public string? Section { get; set; }
+        public string? Section { get; init; }
         
         [JsonInclude]
-        public BookSentence[]? Sentences { get; set; }
+        public BookSentence[]? Sentences { get; init; }
     }
 }
