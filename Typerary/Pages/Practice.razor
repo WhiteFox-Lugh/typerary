@@ -59,25 +59,17 @@
 
     public static PracticeController? Controller => _controller;
 
-    public Practice()
-    {
-        _controller = null;
-    }
-
     protected override async Task OnInitializedAsync()
     {
-        // read json data
         _tabIndex = 0;
         _sanitizedBookId = GetSanitizedBookId(BookId);
-        
         try
         {
             var book = await Http.GetFromJsonAsync<Book?>($"/jsonData/works/{_sanitizedBookId}.json");
             if (book is null) throw new InvalidDataException("Exception: json data load failed");
-
-            // set data
             _bookTitle = book.Title;
-            _controller = new PracticeController(book);
+            _controller = new PracticeController();
+            _controller.Initialize(book);
             _isLoadComplete = true;
         }
         catch (HttpRequestException ex)
