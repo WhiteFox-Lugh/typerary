@@ -6,12 +6,16 @@
     <NotFound>
         <PageTitle>Typerary - Not found</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3">
-                Not Found
-            </RadzenText>
-            <RadzenText TextStyle="TextStyle.Body1">
-                <RadzenIcon Icon="announcement" IconStyle="IconStyle.Danger" /> お探しの本は取り扱っておりません。
-            </RadzenText>
+            <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(0.5)">
+                <article class="content p-3 m-4 rz-shadow-8 rz-border-radius-3 align-items-center text-center body-about-bg-alpha">
+                    <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H3">
+                        Not Found
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1">
+                        <RadzenIcon Icon="announcement" IconStyle="IconStyle.Danger"/> ページが見つかりませんでした。
+                    </RadzenText>
+                </article>
+            </Animate>
         </LayoutView>
     </NotFound>
 </Router>
