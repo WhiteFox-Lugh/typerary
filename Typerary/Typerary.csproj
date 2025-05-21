@@ -18,7 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
     <PackageReference Include="PublishSPAforGitHubPages.build" Version="3.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.0.0" />
+    <PackageReference Include="Radzen.Blazor" Version="7.0.6" />
     <PackageReference Include="Shaman.DiffMatchPatch" Version="1.0.0.5" />
   </ItemGroup>
 
