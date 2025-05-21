@@ -33,7 +33,7 @@
         content: attr(data-en);
         position: absolute;
         transform: rotate(-2deg);
-        top: 0;
+        top: 15px;
         left: 0;
         color: rgb(255, 220, 200);
         z-index: -1;

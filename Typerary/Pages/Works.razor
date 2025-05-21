@@ -9,7 +9,7 @@
 <PageTitle>Typerary - Works</PageTitle>
 
 <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
-    <article class="content p-5 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
+    <article class="content p-4 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
 
         <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-5 article-heading" data-en="Works">作品一覧</RadzenText>
 
@@ -27,7 +27,7 @@
                                 @(_works.IndexOf(work) + 1)
                             </Template>
                         </RadzenDataGridColumn>
-                        <RadzenDataGridColumn Width="40%" TItem="WorkData" Property="TitleYomi" Title="作品名 / Title">
+                        <RadzenDataGridColumn Width="40%" TItem="WorkData" Property="TitleKana" Title="作品名 / Title">
                             <Template Context="work">
                                 <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H5" class="rz-color-primary-darker">
                                     <RadzenLink Path=@GetUrl(work.WorkId) Text=@(work.Title) />
