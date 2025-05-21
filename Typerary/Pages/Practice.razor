@@ -65,7 +65,11 @@
         _sanitizedBookId = GetSanitizedBookId(BookId);
         try
         {
+#if DEBUG
             var book = await Http.GetFromJsonAsync<Book?>($"/jsonData/works/{_sanitizedBookId}.json");
+#else
+            var book = await Http.GetFromJsonAsync<Book?>($"/typerary/jsonData/works/{_sanitizedBookId}.json");
+#endif
             if (book is null) throw new InvalidDataException("Exception: json data load failed");
             _bookTitle = book.Title;
             _controller = new PracticeController();
