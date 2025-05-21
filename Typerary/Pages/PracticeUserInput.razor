@@ -1,6 +1,10 @@
 @inject IJSRuntime JSRuntime
 
 <script>
+    window.isMacOS = () => {
+        return navigator.userAgent.includes("Mac");
+    };
+    
     window.setupTypingShortcuts = function (elementId, dotNetHelper)
     {
         const element = document.getElementById(elementId);
@@ -33,6 +37,7 @@
             }
         });
     }
+
 </script>
 
 <div class="container-fluid my-2">
@@ -69,27 +74,33 @@
                 操作:
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
-                ・Ctrl+Enter : 次の文へ
+                ・@SubmitShortcutKeyDisplayString : 次の文へ
             </RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
                 ・Esc長押し（1秒）: 練習終了
             </RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1" TagName="TagName.P">
+                ・@RetryShortcutKeyDisplayString : リトライ
+            </RadzenText>
         </div>
         <div class="col-3">
-            <RadzenButton Shade="Shade.Light" Click=@OnClickNextButton Text="次の文へ(Ctrl+Enter)" ButtonStyle="ButtonStyle.Primary" class="w-75 mb-3"/>
-            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@Finish Text="練習終了(Esc 長押し)" ButtonStyle="ButtonStyle.Danger" class="w-75"/>
+            <RadzenButton Shade="Shade.Light" Click=@OnClickNextButton Text="次の文へ)" ButtonStyle="ButtonStyle.Primary" class="w-75 mb-3"/>
+            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@Finish Text="練習終了" ButtonStyle="ButtonStyle.Danger" class="w-75"/>
+            <RadzenButton Variant="Variant.Outlined" Shade="Shade.Lighter" Click=@Init Text="リトライ" ButtonStyle="ButtonStyle.Primary" class="w-75"/>
         </div>
     </div>
 </div>
 
 @code {
     private const string EndAnnouncement = "### おつかれさまでした！Result(Summary)タブより練習結果を開いてください。";
-    private const string EnterKeyStr = "Enter";
     private static string? _currentTaskSentence = string.Empty;
     private static string _currentInputSentence = string.Empty;
     private static int _currentSectionNumber = 0;
     private static int _allSectionNumber = 0;
-
+    private bool isMac;
+    private string RetryShortcutKeyDisplayString => isMac ? "Command(⌘)+R" : "Ctrl+R";
+    private string SubmitShortcutKeyDisplayString => isMac ? "Command(⌘)+Enter" : "Ctrl+Enter";
+    
     protected override async Task OnInitializedAsync() => await Init();
 
     private async Task Init()
@@ -172,6 +183,9 @@
         {
             var dotNetRef = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("setupTypingShortcuts", "typingArea", dotNetRef);
+            
+            isMac = await JSRuntime.InvokeAsync<bool>("isMacOS");
+            StateHasChanged();
         }
     }
 
