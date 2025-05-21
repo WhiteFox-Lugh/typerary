@@ -8,7 +8,7 @@
 
 <PageTitle>Typerary - Works</PageTitle>
 
-<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(1)">
+<Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(0.5)">
     <article class="content p-4 m-5 body-bg-alpha rz-shadow-8 rz-border-radius-3">
 
         <RadzenText TextStyle="TextStyle.DisplayH3" class="mb-5 article-heading" data-en="Works">作品一覧</RadzenText>
@@ -19,7 +19,7 @@
         }
         else
         {
-            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
                 <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" Data="@_works" TItem="WorkData" class="rz-shadow-2 mt-5">
                     <Columns>
                         <RadzenDataGridColumn Width="5%" TItem="WorkData" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
