@@ -16,7 +16,7 @@
         else
         {
             <RadzenText TextStyle="TextStyle.DisplayH4" TagName="TagName.H3" class="mb-5 article-heading" data-en="Practice">@(_bookTitle)</RadzenText>
-            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.75)">
+            <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.25)">
                 <RadzenTabs @bind-SelectedIndex=@_tabIndex Change=@OnChange>
                     <Tabs>
                         <RadzenTabsItem Text="Practice">
