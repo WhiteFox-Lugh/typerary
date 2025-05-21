@@ -1,0 +1,23 @@
+﻿{
+  "WorkList": [
+    {
+      "WorkId": "jp-628",
+      "Title": "ごん狐(一のみ)",
+      "TitleKana": "ごんぎつね",
+      "Author": "新美南吉",
+      "AuthorKana": "にいみなんきち",
+      "Language": "Japanese",
+      "Source": "青空文庫",
+      "WorkUri": "https://www.aozora.gr.jp/cards/000121/card628.html"
+    },
+    {
+      "WorkId": "en-14838",
+      "Title": "The Tale of Peter Rabbit",
+      "TitleKana": "The Tale of Peter Rabbit",
+      "Author": "Beatrix Potter",
+      "Language": "English",
+      "Source": "Project Gutenberg",
+      "WorkUri": "https://www.gutenberg.org/ebooks/14838"
+    }
+  ]
+}
